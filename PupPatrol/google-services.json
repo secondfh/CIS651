@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "999749564275",
+    "firebase_url": "https://pup-patrol-default-rtdb.firebaseio.com",
+    "project_id": "pup-patrol",
+    "storage_bucket": "pup-patrol.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999749564275:android:009623ef83788f6c83b706",
+        "android_client_info": {
+          "package_name": "com.example.puppatrol"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999749564275-l4cr29ageh03491m9kuomu99jlctkhhc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBWLSBszQwoCYH_6k05-VGYirpgiqgdNZU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999749564275-l4cr29ageh03491m9kuomu99jlctkhhc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
