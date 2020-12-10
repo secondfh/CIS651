@@ -4,5 +4,6 @@
 *.class
 *.iml
 PupPatrol/.gradle/
-PupPatrol/.idea
+PupPatrol/.idea/
 PupPatrol/local.properties
+PupPatrol/app/build/
