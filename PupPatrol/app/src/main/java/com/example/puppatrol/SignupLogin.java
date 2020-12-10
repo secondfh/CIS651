@@ -21,7 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class SignupLogin extends AppCompatActivity {
 
 //    private EditText email, password, displayname, phonenumber;
-    private EditText email, password, displayname, phonenumber;
+    private EditText email, password;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     Button signupBtn;
@@ -31,32 +31,33 @@ public class SignupLogin extends AppCompatActivity {
         setContentView(R.layout.activity_signup_login);
         email=findViewById(R.id.emailText);
         password=findViewById(R.id.passwordText);
-        phonenumber=findViewById(R.id.phoneNumberText);
-        displayname=findViewById(R.id.displayNameText);
+//        phonenumber=findViewById(R.id.phoneNumberText);
+//        displayname=findViewById(R.id.displayNameText);
         signupBtn=findViewById(R.id.signupBtn);
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        updateUI();
+//        updateUI();
     }
     private void updateUI(){
         if(currentUser!=null){
-            findViewById(R.id.displayNameLayout).setVisibility(View.GONE);
-            findViewById(R.id.phoneNumberLayout).setVisibility(View.GONE);
+//            findViewById(R.id.displayNameLayout).setVisibility(View.GONE);
+//            findViewById(R.id.phoneNumberLayout).setVisibility(View.GONE);
             signupBtn.setVisibility(View.GONE);
         }
     }
-    private void saveUserDataToDB(){
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference usersRef = database.getReference("Users");
-        usersRef.child(currentUser.getUid()).setValue(new User(displayname.getText().toString(),
-                email.getText().toString(), phonenumber.getText().toString()));
-
-    }
+//    private void saveUserDataToDB(){
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference usersRef = database.getReference("Users");
+//        usersRef.child(currentUser.getUid()).setValue(new User(displayname.getText().toString(),
+//                email.getText().toString(), phonenumber.getText().toString()));
+//
+//    }
     public void Signup(View view) {
 
-        if(email.getText().toString().equals("")|| password.getText().toString().equals("")
-                || phonenumber.getText().toString().equals("")|| displayname.getText().toString().equals("")){
+//        if(email.getText().toString().equals("")|| password.getText().toString().equals("")
+//                || phonenumber.getText().toString().equals("")|| displayname.getText().toString().equals("")){
+        if(email.getText().toString().equals("")|| password.getText().toString().equals("")){
             Toast.makeText(this, "Please provide all information", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -69,7 +70,7 @@ public class SignupLogin extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(SignupLogin.this, "Signup successful. Verification email sent!", Toast.LENGTH_SHORT).show();
-                                    saveUserDataToDB();
+//                                    saveUserDataToDB();
                                     updateUI();
                                 }
                             }).addOnFailureListener(SignupLogin.this, new OnFailureListener() {
@@ -152,5 +153,13 @@ public class SignupLogin extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    public void Register(View view) {
+        Intent intent = new Intent(this, RegisterActivity.class);
+
+        intent.putExtra("email", email.getText().toString());
+
+        startActivity(intent);
     }
 }

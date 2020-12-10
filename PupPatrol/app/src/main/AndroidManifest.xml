@@ -20,6 +20,9 @@
         <activity
             android:name=".SignupLogin"
             android:theme="@style/Theme.Splash" />
+        <activity
+            android:name=".RegisterActivity"
+            android:theme="@style/Theme.Splash" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
