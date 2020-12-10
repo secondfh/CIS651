@@ -1,0 +1,8 @@
+*.apk
+*.ap_
+*.dex
+*.class
+*.iml
+PupPatrol/.gradle/
+PupPatrol/.idea
+PupPatrol/local.properties
