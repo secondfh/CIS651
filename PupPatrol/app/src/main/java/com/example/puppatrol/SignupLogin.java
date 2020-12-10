@@ -2,6 +2,7 @@ package com.example.puppatrol;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,73 +21,97 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class SignupLogin extends AppCompatActivity {
 
-//    private EditText email, password, displayname, phonenumber;
-    private EditText email, password;
+    //    private EditText email, password, displayname, phonenumber;
+    private EditText email, password, displayname, phonenumber;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     Button signupBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_login);
         email=findViewById(R.id.emailText);
         password=findViewById(R.id.passwordText);
-//        phonenumber=findViewById(R.id.phoneNumberText);
-//        displayname=findViewById(R.id.displayNameText);
+        password.setTransformationMethod(new AsteriskPasswordTransformationMethod());
+        phonenumber=findViewById(R.id.phoneNumberText);
+        displayname=findViewById(R.id.displayNameText);
         signupBtn=findViewById(R.id.signupBtn);
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-//        updateUI();
+        updateUI();
     }
+
+    public class AsteriskPasswordTransformationMethod extends PasswordTransformationMethod {
+        @Override
+        public CharSequence getTransformation(CharSequence source, View view) {
+            return new PasswordCharSequence(source);
+        }
+
+        private class PasswordCharSequence implements CharSequence {
+            private CharSequence mSource;
+            public PasswordCharSequence(CharSequence source) {
+                mSource = source; // Store char sequence
+            }
+            public char charAt(int index) {
+                return '*'; // This is the important part
+            }
+            public int length() {
+                return mSource.length(); // Return default
+            }
+            public CharSequence subSequence(int start, int end) {
+                return mSource.subSequence(start, end); // Return default
+            }
+        }
+    };
     private void updateUI(){
         if(currentUser!=null){
-//            findViewById(R.id.displayNameLayout).setVisibility(View.GONE);
-//            findViewById(R.id.phoneNumberLayout).setVisibility(View.GONE);
+            findViewById(R.id.displayNameLayout).setVisibility(View.GONE);
+            findViewById(R.id.phoneNumberLayout).setVisibility(View.GONE);
             signupBtn.setVisibility(View.GONE);
         }
     }
-//    private void saveUserDataToDB(){
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference usersRef = database.getReference("Users");
-//        usersRef.child(currentUser.getUid()).setValue(new User(displayname.getText().toString(),
-//                email.getText().toString(), phonenumber.getText().toString()));
-//
-//    }
+    private void saveUserDataToDB(){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersRef = database.getReference("Users");
+        usersRef.child(currentUser.getUid()).setValue(new User(displayname.getText().toString(),
+                email.getText().toString(), phonenumber.getText().toString()));
+
+    }
     public void Signup(View view) {
 
-//        if(email.getText().toString().equals("")|| password.getText().toString().equals("")
-//                || phonenumber.getText().toString().equals("")|| displayname.getText().toString().equals("")){
-        if(email.getText().toString().equals("")|| password.getText().toString().equals("")){
+        if(email.getText().toString().equals("")|| password.getText().toString().equals("")
+                || phonenumber.getText().toString().equals("")|| displayname.getText().toString().equals("")){
             Toast.makeText(this, "Please provide all information", Toast.LENGTH_SHORT).show();
             return;
         }
         mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                 .addOnSuccessListener(this, new OnSuccessListener<AuthResult>() {
-                        @Override
-                        public void onSuccess(AuthResult authResult) {
-                            currentUser=authResult.getUser();
-                            currentUser.sendEmailVerification().addOnSuccessListener(SignupLogin.this, new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(SignupLogin.this, "Signup successful. Verification email sent!", Toast.LENGTH_SHORT).show();
-//                                    saveUserDataToDB();
-                                    updateUI();
-                                }
-                            }).addOnFailureListener(SignupLogin.this, new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(SignupLogin.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        currentUser=authResult.getUser();
+                        currentUser.sendEmailVerification().addOnSuccessListener(SignupLogin.this, new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(SignupLogin.this, "Signup successful. Verification email sent!", Toast.LENGTH_SHORT).show();
+                                saveUserDataToDB();
+                                updateUI();
+                            }
+                        }).addOnFailureListener(SignupLogin.this, new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(SignupLogin.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
 
-                        }
+                    }
                 })
                 .addOnFailureListener(this, new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(SignupLogin.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(SignupLogin.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 });
     }
 
@@ -138,8 +163,8 @@ public class SignupLogin extends AppCompatActivity {
                         currentUser=authResult.getUser();
                         if(currentUser.isEmailVerified()){
                             Toast.makeText(SignupLogin.this, "Login Successful.", Toast.LENGTH_SHORT).show();
-//                            startActivity(new Intent(SignupLogin.this, HomeActivity.class));
-//                            finish();
+                            startActivity(new Intent(SignupLogin.this, HomeActivity.class));
+                            finish();
                         }
                         else
                         {
@@ -147,19 +172,11 @@ public class SignupLogin extends AppCompatActivity {
                         }
                     }
                 }).addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SignupLogin.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(SignupLogin.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
-    }
-
-    public void Register(View view) {
-        Intent intent = new Intent(this, RegisterActivity.class);
-
-        intent.putExtra("email", email.getText().toString());
-
-        startActivity(intent);
     }
 }
