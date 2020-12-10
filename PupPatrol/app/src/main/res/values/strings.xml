@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Pup Patrol</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyA8crGmzvIyyENXB7Xek1bwVJ88fvpXD9E</string>
 </resources>
