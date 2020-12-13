@@ -1,5 +1,6 @@
 package com.example.puppatrol;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,7 @@ public class ChooseRoleActivity extends AppCompatActivity {
     }
 
     public void GoToWalker(View view) {
-        Log.d("ChooseRole", "Waiting for Walker Activity");
+//        Log.d("ChooseRole", "Waiting for Walker Activity");
+        startActivity(new Intent(this, WalkerActivity.class));
     }
 }
