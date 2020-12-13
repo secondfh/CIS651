@@ -37,6 +37,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        app:itemIconPadding="16dp"
         app:headerLayout="@layout/nav_header_walker"
         app:menu="@menu/nav_walker_drawer" />
 

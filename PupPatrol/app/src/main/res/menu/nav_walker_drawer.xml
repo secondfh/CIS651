@@ -6,16 +6,16 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/walker_nav_home"
+            android:icon="@drawable/icon_home_white"
+            android:title="@string/walker_menu_home" />
+        <item
             android:id="@+id/walker_nav_requests"
-            android:icon="@drawable/icon_list"
-            android:title="Active Requests" />
+            android:icon="@drawable/icon_list_white"
+            android:title="@string/walker_menu_requests" />
         <item
             android:id="@+id/walker_nav_history"
-            android:icon="@drawable/icon_history"
-            android:title="Walk History" />
-        <item
-            android:id="@+id/walker_nav_chats"
-            android:icon="@drawable/icon_chat"
-            android:title="Chats" />
+            android:icon="@drawable/icon_history_white"
+            android:title="@string/walker_menu_history" />
     </group>
 </menu>
