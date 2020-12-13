@@ -28,6 +28,9 @@
 
         <activity android:name=".SignupLogin" />
         <activity
+            android:name=".ChooseRoleActivity" />
+
+        <activity
             android:name=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
