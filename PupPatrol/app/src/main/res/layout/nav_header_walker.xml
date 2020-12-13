@@ -31,5 +31,5 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:text="Other Interesting Text" />
+        android:text="Walker's Display Name" />
 </LinearLayout>
