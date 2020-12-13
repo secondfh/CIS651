@@ -1,9 +1,16 @@
 <resources>
     <!-- styles.xml for layout styles -->
     <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
-        <item name="tabIndicatorColor">@android:color/holo_blue_light</item>
+        <item name="tabIndicatorColor">@android:color/holo_blue_dark</item>
         <item name="tabIndicatorHeight">3dp</item>
         <item name="tabBackground">?attr/selectableItemBackground</item>
-        <item name="tabSelectedTextColor">@android:color/holo_blue_light</item>
+        <item name="tabSelectedTextColor">@android:color/holo_blue_dark</item>
+        <item name="tabTextColor">@android:color/darker_gray</item>
+        <item name="tabInlineLabel">true</item>
+    </style>
+
+    <style name="DarkBubbleText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/offwhite</item>
     </style>
 </resources>

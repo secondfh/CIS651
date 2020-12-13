@@ -26,6 +26,6 @@ public class ChooseRoleActivity extends AppCompatActivity {
 
     public void GoToWalker(View view) {
 //        Log.d("ChooseRole", "Waiting for Walker Activity");
-        startActivity(new Intent(this, WalkerActivity.class));
+        startActivity(new Intent(this, WalkerActivity2.class));
     }
 }

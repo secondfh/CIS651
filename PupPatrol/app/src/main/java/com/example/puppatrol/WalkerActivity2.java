@@ -27,6 +27,7 @@ public class WalkerActivity2 extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
         setupViewPager();
         TabLayout tabs = findViewById(R.id.walker_tabs);
         tabs.setupWithViewPager(mViewPager);
@@ -39,10 +40,10 @@ public class WalkerActivity2 extends AppCompatActivity {
         mWalkerPagerAdapter.addPage(getString(R.string.walker_menu_history), new HistoryFragment());
         mViewPager = findViewById(R.id.walker_view_pager);
         mViewPager.setAdapter(mWalkerPagerAdapter);
-        mViewPager.setPageTransformer(true, new DepthPageTransformer());
+        mViewPager.setPageTransformer(true, new MyPageTransformer());
     }
 
-    public static class DepthPageTransformer implements ViewPager.PageTransformer {
+    public static class MyPageTransformer implements ViewPager.PageTransformer {
         private static final float MIN_SCALE = 0.75f;
 
         public void transformPage(View view, float position) {

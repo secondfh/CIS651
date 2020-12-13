@@ -20,7 +20,8 @@
         <activity
             android:name=".WalkerActivity2"
             android:label="@string/title_activity_walker2"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".ChooseRoleActivity"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
