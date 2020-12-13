@@ -22,8 +22,14 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
         <activity
-            android:name=".SignupLogin" />
+            android:name=".SignupLogin"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name=".RegisterActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <activity
             android:name=".ChooseRoleActivity" />

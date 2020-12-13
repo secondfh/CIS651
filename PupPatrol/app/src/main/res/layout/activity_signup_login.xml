@@ -47,41 +47,30 @@
                 android:layout_height="wrap_content"/>
 
         </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/displayNameLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Display Name">
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/displayNameLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="Display Name">-->
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/displayNameText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:id="@+id/displayNameText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"/>-->
 
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/phoneNumberLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Phone Number">
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
+<!--        <com.google.android.material.textfield.TextInputLayout-->
+<!--            android:id="@+id/phoneNumberLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="Phone Number">-->
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/phoneNumberText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:id="@+id/phoneNumberText"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"/>-->
 
-        </com.google.android.material.textfield.TextInputLayout>
-        <Button
-            android:id="@+id/signupBtn"
-            android:text="SIGNUP"
-            android:textColor="@color/offwhite"
-            android:background="@drawable/signup_button"
-            android:textSize="20sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:onClick="Signup">
-
-        </Button>
+<!--        </com.google.android.material.textfield.TextInputLayout>-->
         <Button
             android:layout_marginTop="5dp"
             android:text="LOGIN"
@@ -91,7 +80,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="Login">
-
+        </Button>
+<!--        <Button-->
+<!--            android:id="@+id/signupBtn"-->
+<!--            android:text="SIGNUP"-->
+<!--            android:textColor="@color/offwhite"-->
+<!--            android:background="@drawable/signup_button"-->
+<!--            android:textSize="20sp"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:onClick="Signup">-->
+<!--        </Button>-->
+        <Button
+            android:id="@+id/signupBtn"
+            android:text="SIGN UP"
+            android:textColor="@color/offwhite"
+            android:background="@drawable/signup_button"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:onClick="Register">
         </Button>
         <LinearLayout
             android:layout_marginTop="5dp"

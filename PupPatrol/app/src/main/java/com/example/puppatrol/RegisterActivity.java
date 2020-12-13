@@ -1,5 +1,6 @@
 package com.example.puppatrol;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -58,6 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(RegisterActivity.this, "Signup successful. Verification email sent!", Toast.LENGTH_SHORT).show();
                             registerUser();
+                            startActivity(new Intent(RegisterActivity.this, SignupLogin.class));
                             finish();
                         }
                     }).addOnFailureListener(RegisterActivity.this, new OnFailureListener() {
