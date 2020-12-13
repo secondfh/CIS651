@@ -5,13 +5,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,18 +91,15 @@ public class MyRecyclerAdapter
             public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
                 final PostModel u =key_to_Post.get(keyList.get(position));
                 String uid=u.uid;
+                String postid = database.getReference("Posts").getKey();
+                final Date dateTime = Calendar.getInstance().getTime();
+                final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                final Float mrating = u.rating;
                 if(holder.uref!=null && holder.urefListener!=null)
                 {
                     holder.uref.removeEventListener(holder.urefListener);
                 }
-                if(holder.likesRef!=null && holder.likesRefListener!=null)
-                {
-                    holder.likesRef.removeEventListener(holder.likesRefListener);
-                }
-                if(holder.likeCountRef!=null && holder.likeCountRefListener!=null)
-                {
-                    holder.likeCountRef.removeEventListener(holder.likeCountRefListener);
-                }
+
                 final FirebaseDatabase database = FirebaseDatabase.getInstance();
                 holder.uref = database.getReference("Users").child(uid);
                 holder.uref.addValueEventListener(new ValueEventListener() {
@@ -106,8 +109,8 @@ public class MyRecyclerAdapter
                         holder.email_v.setText("Email:  " + dataSnapshot.child("email").getValue().toString());
                         holder.phone_v.setText("Phone Num:  " + dataSnapshot.child("phone").getValue().toString());
                         holder.date_v.setText("Date Created: "+u.date);
-                        if(dataSnapshot.child("profilePicture").exists()){
-                            Picasso.get().load(dataSnapshot.child("profilePicture").getValue().toString()).into(holder.imageButton);
+                        if(dataSnapshot.child("url").exists()){
+                            Picasso.get().load(dataSnapshot.child("url").getValue().toString()).into(holder.imageButton);
 
                         } else{
                             holder.imageButton.setImageDrawable(ContextCompat.getDrawable(holder.imageButton.getContext(), R.mipmap.ic_launcher));
@@ -119,24 +122,23 @@ public class MyRecyclerAdapter
 
                     }
                 });
-                holder.likeCountRef=
-                database.getReference("Posts/"+u.postKey+"/likeCount");
-                Log.d("LIKEC ", u.postKey);
-               holder.likeCountRefListener=holder.likeCountRef.addValueEventListener(new ValueEventListener() {
+
+                holder.uref = database.getReference("Posts").child(postid);
+                holder.uref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //Log.d("CRASH", dataSnapshot.toString());
-                        if(dataSnapshot.getValue()!=null)
-                         holder.likeCount.setText(dataSnapshot.getValue().toString()+" Likes");
+                        holder.ratingBar.setRating(mrating);
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });
 
 
+
+                holder.ratingBar.setRating(Float.parseFloat(u.rating.toString()));
                 holder.imageButton.setOnClickListener(new View.OnClickListener(){
 
                     @Override
@@ -159,12 +161,20 @@ public class MyRecyclerAdapter
                             itemClickListener.onItmeClick(currentMarker.getPosition());
                     }
                 });
-                holder.description_v.setText(u.description);
+
                 StorageReference pathReference = FirebaseStorage.getInstance().getReference("images/"+u.url);
                 pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).into(holder.imageView);
+                    }
+                });
+
+                holder.reqbtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String time = sdf.format(dateTime);
+                        RequestInfo(currentUser.getUid(), time , "started", u.uid);
                     }
                 });
 
@@ -175,10 +185,27 @@ public class MyRecyclerAdapter
                 if(usersRef!=null && usersRefListener!=null)
                     usersRef.removeEventListener(usersRefListener);
             }
+
             @Override
             public int getItemCount() {
                 return keyList.size();
             }
+
+            public void RequestInfo(String client, String requestDate, String status, String walker) {
+
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("client", client);
+                hashMap.put("requestDate", requestDate);
+                hashMap.put("status", status);
+                hashMap.put("walker", walker);
+
+                reference.child("Requests").push().setValue(hashMap);
+
+            }
+
+
+
             public static class ViewHolder extends RecyclerView.ViewHolder{
                 public TextView fname_v;
                 public TextView email_v;
@@ -186,26 +213,22 @@ public class MyRecyclerAdapter
                 public TextView date_v;
                 public TextView description_v;
                 public ImageView imageView;
-                public  ImageView likeBtn;
-                public TextView likeCount;
                 public ImageButton imageButton;
+                public RatingBar ratingBar;
+                public Button reqbtn;
                 DatabaseReference uref;
                 ValueEventListener urefListener;
 
-                DatabaseReference likeCountRef;
-                ValueEventListener likeCountRefListener;
-
-                DatabaseReference likesRef;
-                ValueEventListener likesRefListener;
                 public ViewHolder(View v){
                     super(v);
-                    fname_v = (TextView) v.findViewById(R.id.fname_view);
-                    email_v = (TextView) v.findViewById(R.id.email_view);
-                    phone_v = (TextView) v.findViewById(R.id.phone_view);
-                   date_v = (TextView) v.findViewById(R.id.date_view);
-                   description_v=v.findViewById(R.id.description);
+                    fname_v = v.findViewById(R.id.fname_view);
+                    email_v =  v.findViewById(R.id.email_view);
+                    phone_v =  v.findViewById(R.id.phone_view);
+                   date_v =  v.findViewById(R.id.date_view);
+                   ratingBar=v.findViewById(R.id.rating);
                    imageView=v.findViewById(R.id.postImg);
                    imageButton = v.findViewById(R.id.profilePic);
+                   reqbtn = v.findViewById(R.id.requestbtn);
                 }
             }
 
