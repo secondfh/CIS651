@@ -143,7 +143,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 Location lastLocation = locationResult.getLastLocation();
                 CameraPosition cameraPosition = new CameraPosition.Builder()
                         .target(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude())).zoom(14).build();
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                //mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
         };
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.walker_map);
@@ -249,7 +249,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         statusSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+                if (!isChecked) {
                     if (postKey != null && !postKey.equals("")){
                         postsRef.child(postKey).removeValue();
                     }
