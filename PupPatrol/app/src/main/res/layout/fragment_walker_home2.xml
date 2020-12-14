@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 style="@style/DarkBubbleText"
-                android:text="Pending requests"/>
+                android:text="@string/walker_home_pending_requests"/>
             <TextView
                 android:id="@+id/walker_pending_request_count"
                 android:layout_width="wrap_content"
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 style="@style/DarkBubbleText"
-                android:text="Accepted requests"/>
+                android:text="@string/walker_home_accepted_requests"/>
             <TextView
                 android:id="@+id/walker_accepted_request_count"
                 android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 style="@style/DarkBubbleText"
-                android:text="Walk requests in progress"/>
+                android:text="@string/walker_home_in_progress_requests"/>
             <TextView
                 android:id="@+id/walker_started_request_count"
                 android:layout_width="wrap_content"
@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 style="@style/DarkBubbleText"
-                android:text="Completed requests"/>
+                android:text="@string/walker_home_completed_requests"/>
             <TextView
                 android:id="@+id/walker_completed_request_count"
                 android:layout_width="wrap_content"
@@ -114,14 +114,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 style="@style/DarkBubbleText"
-                android:text="Avg review rating"/>
+                android:text="@string/walker_home_avg_rating"/>
             <androidx.appcompat.widget.AppCompatRatingBar
                 android:id="@+id/walker_rating_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="3dp"
+                android:isIndicator="true"
+                android:numStars="5"
+                android:stepSize="0.1"
                 android:rating="2.5"
-                style="@android:style/Widget.DeviceDefault.Light.RatingBar.Small"/>
+                style="@style/BoneRatingBar"/>
             <TextView
                 android:id="@+id/walker_rating_count"
                 android:layout_width="wrap_content"
@@ -149,7 +152,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Walker status"
+                android:text="@string/walker_setting_status"
                 android:textSize="16sp" />
             <View
                 android:layout_width="2dp"
@@ -174,7 +177,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Availability"
+                android:text="@string/walker_setting_available"
                 android:textSize="16sp" />
             <View
                 android:layout_width="2dp"

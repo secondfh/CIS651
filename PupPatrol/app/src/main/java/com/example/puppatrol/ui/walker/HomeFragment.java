@@ -18,11 +18,6 @@ public class HomeFragment extends Fragment {
 
     }
 
-    public static HomeFragment newInstance(int index) {
-        HomeFragment fragment = new HomeFragment();
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
