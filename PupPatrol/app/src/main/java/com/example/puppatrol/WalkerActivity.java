@@ -69,7 +69,7 @@ public class WalkerActivity extends AppCompatActivity implements NavigationView.
             case R.id.walker_nav_history:
                 // TODO: load walker history fragment
                 break;
-            case R.id.walker_nav_chats:
+            case R.id.walker_nav_home:
                 // TODO: launch chat activity
                 break;
         }

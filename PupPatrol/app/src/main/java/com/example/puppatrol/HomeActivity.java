@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.MediaStore;
@@ -18,7 +19,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -102,7 +105,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     dataSnapshot.child("url").getValue().toString(),
                                     localDateFormat.format(new Date(Long.parseLong(dataSnapshot.child("timestamp").getValue().toString())))
                                     , dataSnapshot.getKey(), mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(dataSnapshot.child("lat").getValue().toString()), Double.parseDouble(dataSnapshot.child("lng").getValue().toString())))
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.red_dog))));
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.red_dog))),dataSnapshot.child("lat").getValue().toString(), dataSnapshot.child("lng").getValue().toString());
 
                             key_to_Post.put(postKey, postModel);
                             keyList.add(postKey);
@@ -164,8 +167,6 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         //myRecyclerAdapter = new MyRecyclerAdapter(key_to_Post, keyList, this, recyclerView);
         myRecyclerAdapter = new MyRecyclerAdapter(key_to_Post, keyList, this, recyclerView);
         recyclerView.setAdapter(myRecyclerAdapter);
-        //Please take a look at this
-        //https://developers.google.com/android/reference/com/google/android/gms/location/LocationRequest
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -199,8 +200,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .findFragmentById(R.id.map);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mapFragment.getMapAsync(this);
-        //Source
-        //https://developer.android.com/training/permissions/requesting#java
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "We need permission to access your location.", Toast.LENGTH_SHORT).show();
             ActivityCompat.requestPermissions(this,
@@ -212,7 +212,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
     }
-    //https://developer.android.com/training/permissions/requesting#java
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
@@ -233,37 +233,34 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
                 return;
         }
-        // Other 'case' lines to check for other
-        // permissions this app might request.
+
     }
 
 
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actionbar_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.signout:
                 mAuth.signOut();
-                finish();
-                return true;
-            case R.id.newUser:
-                createTestEntry();
-                return true;
-            case R.id.edit_profile:
-                startActivity(new Intent(this, EditProfile.class));
+                startActivity(new Intent(this, SignupLogin.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
-    private void createTestEntry() {
+    /*private void createTestEntry() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersRef = database.getReference("Users");
         String pushKey = usersRef.push().getKey();
@@ -350,8 +347,7 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                //show the image
-                Toast.makeText(HomeActivity.this, "Marker clicked", Toast.LENGTH_SHORT).show();
+
                 return false;
             }
         });
