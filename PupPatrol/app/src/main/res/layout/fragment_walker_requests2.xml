@@ -8,7 +8,7 @@
     tools:context=".ui.walker.RequestsFragment">
 
     <TextView
-        android:id="@+id/req_section_label"
+        android:id="@+id/temp"
         android:text="Requests"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
