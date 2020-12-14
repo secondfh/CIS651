@@ -1,22 +1,36 @@
 package com.example.puppatrol;
 
+import android.Manifest;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
+
+import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Calendar;
+
 import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +38,10 @@ import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryDataEventListener;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,54 +66,85 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MyRecyclerAdapter
-        extends RecyclerView.Adapter<MyRecyclerAdapter.ViewHolder>
-        {
+        extends RecyclerView.Adapter<MyRecyclerAdapter.ViewHolder> {
 
 
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference usersRef = database.getReference("Posts");
-            ChildEventListener usersRefListener;
-            private FirebaseAuth mAuth;
-            private FirebaseUser currentUser;
-            private List<String> keyList;
-            private HashMap<String,PostModel> key_to_Post;
-            private RecyclerView r;
-            private Marker currentMarker =null;
-            private  ItemClickListener itemClickListener;
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference usersRef = database.getReference("Posts");
+    ChildEventListener usersRefListener;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private List<String> keyList;
+    private HashMap<String, PostModel> key_to_Post;
+    private RecyclerView r;
+    private Marker currentMarker = null;
+    private ItemClickListener itemClickListener;
 
-            public MyRecyclerAdapter(HashMap<String,PostModel> kp, List<String> kl, ItemClickListener _itemClickListener, RecyclerView recyclerView){
-                r = recyclerView;
-                keyList=kl;
-                key_to_Post= kp;
-                mAuth = FirebaseAuth.getInstance();
-                currentUser = mAuth.getCurrentUser();
-                itemClickListener =_itemClickListener;
+
+    public MyRecyclerAdapter(HashMap<String, PostModel> kp, List<String> kl, ItemClickListener _itemClickListener, RecyclerView recyclerView) {
+        r = recyclerView;
+        keyList = kl;
+        key_to_Post = kp;
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        itemClickListener = _itemClickListener;
+
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view, parent, false);
+        final ViewHolder vh = new ViewHolder(v);
+        return vh;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        final PostModel u = key_to_Post.get(keyList.get(position));
+        String uid = u.uid;
+        LocationManager locationManager;
+
+        if (ActivityCompat.checkSelfPermission(r.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(r.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            return;
+        }
+        locationManager = (LocationManager)r.getContext().getSystemService(r.getContext().LOCATION_SERVICE);
+        final Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        holder.uref = database.getReference("Posts/" + u.postKey);
+        holder.uref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                double lat = locationGPS.getLatitude();
+                double longi = locationGPS.getLongitude();
+                float[] result = new float[1];
+                String wlat, wlong;
+                wlat = dataSnapshot.child("lat").getValue().toString();
+                wlong = dataSnapshot.child("lng").getValue().toString();
+                Location.distanceBetween(lat, longi, Double.parseDouble(wlat),Double.parseDouble(wlong), result);
+                double conv = result[0] / 1609;
+                holder.distance.setText(roundTwoDecimals(conv) + " miles");
+                u.m.setPosition(new LatLng(Double.parseDouble(wlat), Double.parseDouble(wlong)));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
             }
-            @NonNull
-            @Override
-            public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view, parent,false);
-                final ViewHolder vh = new ViewHolder(v);
-                return vh;
-            }
+        });
 
-            @Override
-            public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-                final PostModel u =key_to_Post.get(keyList.get(position));
-                String uid=u.uid;
+        double lat = locationGPS.getLatitude();
+        double longi = locationGPS.getLongitude();
+        float[] result = new float[1];
+        Location.distanceBetween(lat, longi, Double.parseDouble(u.lat),Double.parseDouble(u.longi), result);
+        double conv = result[0] / 1609;
+        holder.distance.setText(roundTwoDecimals(conv) + " miles");
                 if(holder.uref!=null && holder.urefListener!=null)
                 {
                     holder.uref.removeEventListener(holder.urefListener);
                 }
-                if(holder.likesRef!=null && holder.likesRefListener!=null)
-                {
-                    holder.likesRef.removeEventListener(holder.likesRefListener);
-                }
-                if(holder.likeCountRef!=null && holder.likeCountRefListener!=null)
-                {
-                    holder.likeCountRef.removeEventListener(holder.likeCountRefListener);
-                }
+
                 final FirebaseDatabase database = FirebaseDatabase.getInstance();
                 holder.uref = database.getReference("Users").child(uid);
                 holder.uref.addValueEventListener(new ValueEventListener() {
@@ -106,8 +154,8 @@ public class MyRecyclerAdapter
                         holder.email_v.setText("Email:  " + dataSnapshot.child("email").getValue().toString());
                         holder.phone_v.setText("Phone Num:  " + dataSnapshot.child("phone").getValue().toString());
                         holder.date_v.setText("Date Created: "+u.date);
-                        if(dataSnapshot.child("profilePicture").exists()){
-                            Picasso.get().load(dataSnapshot.child("profilePicture").getValue().toString()).into(holder.imageButton);
+                        if(dataSnapshot.child("url").exists()){
+                            Picasso.get().load(dataSnapshot.child("url").getValue().toString()).into(holder.imageButton);
 
                         } else{
                             holder.imageButton.setImageDrawable(ContextCompat.getDrawable(holder.imageButton.getContext(), R.mipmap.ic_launcher));
@@ -119,23 +167,24 @@ public class MyRecyclerAdapter
 
                     }
                 });
-                holder.likeCountRef=
-                database.getReference("Posts/"+u.postKey+"/likeCount");
-                Log.d("LIKEC ", u.postKey);
-               holder.likeCountRefListener=holder.likeCountRef.addValueEventListener(new ValueEventListener() {
+
+                holder.uref = database.getReference("Users").child(uid);
+                holder.uref.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //Log.d("CRASH", dataSnapshot.toString());
-                        if(dataSnapshot.getValue()!=null)
-                         holder.likeCount.setText(dataSnapshot.getValue().toString()+" Likes");
-                    }
+                        //add if statement to handle if no rating
+                        if(!dataSnapshot.child("walker_rating").exists()){
+                            holder.ratingBar.setRating(0);}
+                        else{
+                        holder.ratingBar.setRating(Float.parseFloat(dataSnapshot.child("walker_rating").getValue().toString()));
+                        holder.reviewcount.setText("(" + dataSnapshot.child("walker_reviews").getValue().toString() + ")");
+                    }}
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    public void onCancelled(@NonNull DatabaseError error) {
 
                     }
                 });
-
 
                 holder.imageButton.setOnClickListener(new View.OnClickListener(){
 
@@ -159,7 +208,7 @@ public class MyRecyclerAdapter
                             itemClickListener.onItmeClick(currentMarker.getPosition());
                     }
                 });
-                holder.description_v.setText(u.description);
+
                 StorageReference pathReference = FirebaseStorage.getInstance().getReference("images/"+u.url);
                 pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
@@ -168,44 +217,77 @@ public class MyRecyclerAdapter
                     }
                 });
 
+                holder.reqbtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String time = null;
+                        String status = r.getContext().getResources().getString(R.string.request_created);
+                        RequestInfo(currentUser.getUid(), time , status, u.uid);
+                    }
+                });
 
 
+
+            }
+
+            double roundTwoDecimals(double d)
+            {
+                DecimalFormat twoDForm = new DecimalFormat("#.##");
+                return Double.valueOf(twoDForm.format(d));
             }
             public void removeListener(){
                 if(usersRef!=null && usersRefListener!=null)
                     usersRef.removeEventListener(usersRefListener);
             }
+
             @Override
             public int getItemCount() {
                 return keyList.size();
             }
+
+            public void RequestInfo(String client, String requestDate, String status, String walker) {
+
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                HashMap<String, Object> hashMap = new HashMap<>();
+                hashMap.put("client", client);
+                hashMap.put("timestamp", ServerValue.TIMESTAMP);
+                hashMap.put("status", status);
+                hashMap.put("walker", walker);
+
+                reference.child("Requests").push().setValue(hashMap);
+
+            }
+
+
+
+
+
             public static class ViewHolder extends RecyclerView.ViewHolder{
                 public TextView fname_v;
                 public TextView email_v;
                 public TextView phone_v;
                 public TextView date_v;
-                public TextView description_v;
+                public TextView distance, reviewcount;
                 public ImageView imageView;
-                public  ImageView likeBtn;
-                public TextView likeCount;
                 public ImageButton imageButton;
-                DatabaseReference uref;
+                public RatingBar ratingBar;
+                public Button reqbtn;
+                public String lati, longit;
+                DatabaseReference uref, wref;
                 ValueEventListener urefListener;
 
-                DatabaseReference likeCountRef;
-                ValueEventListener likeCountRefListener;
-
-                DatabaseReference likesRef;
-                ValueEventListener likesRefListener;
                 public ViewHolder(View v){
                     super(v);
-                    fname_v = (TextView) v.findViewById(R.id.fname_view);
-                    email_v = (TextView) v.findViewById(R.id.email_view);
-                    phone_v = (TextView) v.findViewById(R.id.phone_view);
-                   date_v = (TextView) v.findViewById(R.id.date_view);
-                   description_v=v.findViewById(R.id.description);
+                    fname_v = v.findViewById(R.id.fname_view);
+                    email_v =  v.findViewById(R.id.email_view);
+                    phone_v =  v.findViewById(R.id.phone_view);
+                   date_v =  v.findViewById(R.id.date_view);
+                   ratingBar=v.findViewById(R.id.rating);
                    imageView=v.findViewById(R.id.postImg);
                    imageButton = v.findViewById(R.id.profilePic);
+                   reqbtn = v.findViewById(R.id.requestbtn);
+                   distance = v.findViewById(R.id.distance);
+                   reviewcount = v.findViewById(R.id.review_count);
                 }
             }
 
