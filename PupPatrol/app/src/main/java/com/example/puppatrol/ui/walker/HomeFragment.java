@@ -252,6 +252,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 if (!isChecked) {
                     if (postKey != null && !postKey.equals("")){
                         postsRef.child(postKey).removeValue();
+                        currentUserRef.child("currentpost").removeValue();
                     }
                 } else {
                     if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -272,6 +273,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                             DatabaseReference postRef = postsRef.push();
                             postKey = postRef.getKey();
                             postRef.setValue(new WalkerPost(currentUid, "", "", lat, lng));
+                            currentUserRef.child("currentpost").setValue(postKey);
                         }
                     });
                 }
