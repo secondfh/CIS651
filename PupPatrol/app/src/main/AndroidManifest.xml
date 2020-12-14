@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".WalkerActivity2"
-            android:label="@string/title_activity_walker2"
+            android:label="@string/app_name_walker"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".ChooseRoleActivity"/>
 
