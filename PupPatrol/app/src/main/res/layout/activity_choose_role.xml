@@ -29,11 +29,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textColor="@color/offwhite"
+            android:layout_marginTop="5dp"
+            android:textSize="20dp"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
 
             <Button
                 android:id="@+id/clientBtn"
@@ -41,6 +45,8 @@
                 android:layout_height="wrap_content"
                 android:onClick="GoToClient"
                 android:text="Client"
+                android:textColor="@color/offwhite"
+                android:background="@drawable/signup_button"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/walkerBtn"
@@ -52,6 +58,8 @@
                 android:layout_height="wrap_content"
                 android:onClick="GoToWalker"
                 android:text="Walker"
+                android:textColor="@color/offwhite"
+                android:background="@drawable/signup_button"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/clientBtn"
                 app:layout_constraintRight_toRightOf="parent"

@@ -34,13 +34,17 @@ public class SignupLogin extends AppCompatActivity {
         email=findViewById(R.id.emailText);
         password=findViewById(R.id.passwordText);
         password.setTransformationMethod(new AsteriskPasswordTransformationMethod());
-        phonenumber=findViewById(R.id.phoneNumberText);
-        displayname=findViewById(R.id.displayNameText);
+//        phonenumber=findViewById(R.id.phoneNumberText);
+//        displayname=findViewById(R.id.displayNameText);
         signupBtn=findViewById(R.id.signupBtn);
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        updateUI();
+//        updateUI();
+    }
+
+    public void Register(View view) {
+        startActivity(new Intent(this, RegisterActivity.class));
     }
 
     public class AsteriskPasswordTransformationMethod extends PasswordTransformationMethod {
@@ -67,8 +71,8 @@ public class SignupLogin extends AppCompatActivity {
     };
     private void updateUI(){
         if(currentUser!=null){
-            findViewById(R.id.displayNameLayout).setVisibility(View.GONE);
-            findViewById(R.id.phoneNumberLayout).setVisibility(View.GONE);
+//            findViewById(R.id.displayNameLayout).setVisibility(View.GONE);
+//            findViewById(R.id.phoneNumberLayout).setVisibility(View.GONE);
             signupBtn.setVisibility(View.GONE);
         }
     }
@@ -163,6 +167,7 @@ public class SignupLogin extends AppCompatActivity {
                         currentUser=authResult.getUser();
                         if(currentUser.isEmailVerified()){
                             Toast.makeText(SignupLogin.this, "Login Successful.", Toast.LENGTH_SHORT).show();
+//                            startActivity(new Intent(SignupLogin.this, HomeActivity.class));
                             startActivity(new Intent(SignupLogin.this, ChooseRoleActivity.class));
                             finish();
                         }

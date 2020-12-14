@@ -52,11 +52,28 @@
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
         <Button
+            android:id="@+id/profileBtn"
+            android:text="PROFILE PIC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@color/offwhite"
+            android:background="@drawable/signup_button"
+            android:onClick="UploadFile"/>
+        <ImageView
+            android:id="@+id/profileImagePreview"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            android:layout_gravity="center"/>
+        <Button
             android:id="@+id/registerBtn"
             android:text="REGISTER"
             android:textColor="@color/offwhite"
             android:background="@drawable/signup_button"
             android:textSize="20sp"
+            android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="Register">
