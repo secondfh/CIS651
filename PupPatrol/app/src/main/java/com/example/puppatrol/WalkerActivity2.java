@@ -6,6 +6,8 @@ import android.view.View;
 import com.example.puppatrol.ui.walker.HistoryFragment;
 import com.example.puppatrol.ui.walker.HomeFragment;
 import com.example.puppatrol.ui.walker.RequestsFragment;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.ActionBar;
@@ -17,8 +19,13 @@ import com.example.puppatrol.ui.walker.WalkerPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class WalkerActivity2 extends AppCompatActivity {
+
     WalkerPagerAdapter mWalkerPagerAdapter;
     ViewPager mViewPager;
     FirebaseAuth mAuth;
@@ -40,6 +47,7 @@ public class WalkerActivity2 extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         database = FirebaseDatabase.getInstance();
+
     }
 
     private void setupViewPager(){
@@ -85,4 +93,5 @@ public class WalkerActivity2 extends AppCompatActivity {
             }
         }
     }
+
 }
