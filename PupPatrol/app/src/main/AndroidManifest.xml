@@ -32,7 +32,8 @@
             android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <activity
-            android:name=".ChooseRoleActivity" />
+            android:name=".ChooseRoleActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <activity
             android:name=".HomeActivity"
