@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Pup Patrol</string>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyA8crGmzvIyyENXB7Xek1bwVJ88fvpXD9E</string>
-    <string name="app_name_walker">Be A Pup Walker</string>
-    <string name="app_name_client">Find Pup Walker</string>
+    <string name="app_name_walker">Pup Walker</string>
+    <string name="app_name_client">Find A Walker</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
 
@@ -10,7 +10,14 @@
     <string name="walker_menu_home">Home</string>
     <string name="walker_menu_requests">Requests</string>
     <string name="walker_menu_history">History</string>
-    <string name="title_activity_walker2">Be A Walker</string>
+    <string name="walker_setting_status">Show as Walker</string>
+    <string name="walker_setting_available">Available for requests</string>
+    <string name="walker_home_pending_requests">Pending requests</string>
+    <string name="walker_home_accepted_requests">Accepted requests</string>
+    <string name="walker_home_in_progress_requests">Walks in progress</string>
+    <string name="walker_home_completed_requests">Completed requests</string>
+    <string name="walker_home_avg_rating">Average rating</string>
+
 
     // Request status
     <string name="request_created">Created</string>

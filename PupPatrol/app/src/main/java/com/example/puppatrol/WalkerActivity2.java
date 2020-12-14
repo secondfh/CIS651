@@ -14,10 +14,16 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.puppatrol.ui.walker.WalkerPagerAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class WalkerActivity2 extends AppCompatActivity {
     WalkerPagerAdapter mWalkerPagerAdapter;
     ViewPager mViewPager;
+    FirebaseAuth mAuth;
+    FirebaseUser currentUser;
+    FirebaseDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +37,9 @@ public class WalkerActivity2 extends AppCompatActivity {
         setupViewPager();
         TabLayout tabs = findViewById(R.id.walker_tabs);
         tabs.setupWithViewPager(mViewPager);
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        database = FirebaseDatabase.getInstance();
     }
 
     private void setupViewPager(){
