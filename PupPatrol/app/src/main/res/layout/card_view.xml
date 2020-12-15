@@ -74,25 +74,33 @@
 
         <RatingBar
             android:id="@+id/rating"
-<<<<<<< Updated upstream
-=======
             style="@style/BoneRatingBar"
->>>>>>> Stashed changes
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:isIndicator="true"
             android:numStars="5"
-<<<<<<< Updated upstream
-            android:stepSize="1"
-            android:theme="@style/RatingBar"
-=======
             android:stepSize="0.1"
->>>>>>> Stashed changes
             app:layout_constraintTop_toBottomOf="@+id/date_view"
             card_view:layout_editor_absoluteX="5dp" />
 
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"></TextView>
+
+        <TextView
+            android:id="@+id/review_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/rating"
+            app:layout_constraintBottom_toTopOf="@+id/bar"
+            android:textColor="@android:color/holo_blue_dark"/>
+
         <View
+            android:id="@+id/bar"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/colorAccent"

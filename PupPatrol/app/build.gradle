@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.puppatrol"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -42,5 +42,4 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'com.firebase:geofire-android:3.0.0'
-
 }

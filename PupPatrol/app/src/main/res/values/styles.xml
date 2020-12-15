@@ -1,15 +1,28 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="Theme.AppCompat.NoActionBar." parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <!-- styles.xml for layout styles -->
+    <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabIndicatorColor">@android:color/holo_blue_dark</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabBackground">?attr/selectableItemBackground</item>
+        <item name="tabSelectedTextColor">@android:color/holo_blue_dark</item>
+        <item name="tabTextColor">@android:color/darker_gray</item>
+        <item name="tabInlineLabel">true</item>
     </style>
-    <style name="Theme.Splash" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:windowBackground">@color/splashBackground</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowNoTitle">true</item>
-        <!--        <item name="android:windowActivityTransitions">true</item>-->
+
+    <style name="DarkBubbleText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/offwhite</item>
     </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">#808080</item>
+        <item name="colorControlActivated">#FFDF00</item>
+    </style>
+
+    <style name="BoneRatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="android:progressDrawable">@drawable/rating_bone</item>
+        <item name="android:minHeight">24dp</item>
+        <item name="android:maxHeight">72dp</item>
+    </style>
+
 </resources>
