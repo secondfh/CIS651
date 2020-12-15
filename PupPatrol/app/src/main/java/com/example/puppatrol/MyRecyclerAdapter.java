@@ -82,7 +82,6 @@ public class MyRecyclerAdapter
     private ItemClickListener itemClickListener;
     public String refKey;
 
-
     public MyRecyclerAdapter(HashMap<String, PostModel> kp, List<String> kl, ItemClickListener _itemClickListener, RecyclerView recyclerView) {
         r = recyclerView;
         keyList = kl;
