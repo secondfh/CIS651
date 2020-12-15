@@ -22,6 +22,7 @@ public class ChooseRoleActivity extends AppCompatActivity {
 
     public void GoToClient(View view) {
         Log.d("ChooseRole", "Waiting for Client Activity");
+        startActivity(new Intent(this, HomeActivity.class));
     }
 
     public void GoToWalker(View view) {

@@ -7,6 +7,8 @@ public class User {
     public String email;
     public String phone;
     public Object timestamp;
+    public String url;
+
     public User(String displayname, String email, String phone) {
         this.displayname=displayname;
         this.email=email;
@@ -18,6 +20,10 @@ public class User {
     }
     public User() {
 
+    }
+    public User(String displayname, String email, String phone, String url) {
+        this(displayname, email, phone);
+        this.url = url;
     }
 
     public String getDisplayname() {
@@ -47,4 +53,8 @@ public class User {
     public void setTimestamp(Object timestamp) {
         this.timestamp = timestamp;
     }
+
+    public String getUrl() { return url; }
+
+    public void setUrl(String url) { this.url = url; }
 }
