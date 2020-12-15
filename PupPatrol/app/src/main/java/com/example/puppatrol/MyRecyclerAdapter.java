@@ -71,6 +71,7 @@ public class MyRecyclerAdapter
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference usersRef = database.getReference("Posts");
+	DatabaseReference requestRef = database.getReference("Requests");
     ChildEventListener usersRefListener;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -79,6 +80,7 @@ public class MyRecyclerAdapter
     private RecyclerView r;
     private Marker currentMarker = null;
     private ItemClickListener itemClickListener;
+	public String refKey;
 
 
     public MyRecyclerAdapter(HashMap<String, PostModel> kp, List<String> kl, ItemClickListener _itemClickListener, RecyclerView recyclerView) {
