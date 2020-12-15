@@ -220,9 +220,20 @@ public class MyRecyclerAdapter
                 holder.reqbtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
                         String time = null;
                         String status = r.getContext().getResources().getString(R.string.request_created);
-                        RequestInfo(currentUser.getUid(), time , status, u.uid);
+
+                        if(holder.reqbtn.getText().toString().equals("Request") ){
+                            RequestInfo(currentUser.getUid(), time , status, u.uid);
+                            holder.reqbtn.setText("Cancel");}
+                        else{
+                            if(holder.reqbtn.getText().toString().equals("Cancel")){
+                                holder.reqbtn.setText("Request");
+                                requestRef.child(refKey).removeValue();
+
+                            }
+                            }
                     }
                 });
 
@@ -254,7 +265,8 @@ public class MyRecyclerAdapter
                 hashMap.put("status", status);
                 hashMap.put("walker", walker);
 
-                reference.child("Requests").push().setValue(hashMap);
+                refKey = reference.child("Requests").push().getKey();
+                requestRef.child(refKey).setValue(hashMap);
 
             }
 
