@@ -172,9 +172,25 @@ public class MyRecyclerAdapter
 
                 holder.reqbtn.setOnClickListener(new View.OnClickListener() {
                     @Override
+<<<<<<< Updated upstream
                     public void onClick(View view) {
                         String time = sdf.format(dateTime);
                         RequestInfo(currentUser.getUid(), time , "started", u.uid);
+=======
+                        String time = null;
+                        String status = r.getContext().getResources().getString(R.string.request_created);
+
+                        if(holder.reqbtn.getText().toString().equals("Request") ){
+                            RequestInfo(currentUser.getUid(), time , status, u.uid);
+                            holder.reqbtn.setText("Cancel");}
+                        else{
+                            if(holder.reqbtn.getText().toString().equals("Cancel")){
+                                holder.reqbtn.setText("Request");
+                                requestRef.child(refKey).removeValue();
+
+                            }
+                            }
+>>>>>>> Stashed changes
                     }
                 });
 
@@ -200,7 +216,8 @@ public class MyRecyclerAdapter
                 hashMap.put("status", status);
                 hashMap.put("walker", walker);
 
-                reference.child("Requests").push().setValue(hashMap);
+                refKey = reference.child("Requests").push().getKey();
+                requestRef.child(refKey).setValue(hashMap);
 
             }
 

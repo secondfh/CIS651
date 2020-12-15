@@ -9,6 +9,7 @@
     card_view:cardCornerRadius="10dp"
     card_view:cardElevation="5dp"
     card_view:cardUseCompatPadding="true"
+
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -73,12 +74,21 @@
 
         <RatingBar
             android:id="@+id/rating"
+<<<<<<< Updated upstream
+=======
+            style="@style/BoneRatingBar"
+>>>>>>> Stashed changes
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:isIndicator="true"
             android:numStars="5"
+<<<<<<< Updated upstream
             android:stepSize="1"
             android:theme="@style/RatingBar"
+=======
+            android:stepSize="0.1"
+>>>>>>> Stashed changes
             app:layout_constraintTop_toBottomOf="@+id/date_view"
             card_view:layout_editor_absoluteX="5dp" />
 
