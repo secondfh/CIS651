@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private long FASTEST_INTERVAL = 2000; /* 2 sec */
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-    private String currentUid, postKey;
+    private String currentUid, postKey="";
     private DatabaseReference currentUserRef, requestsRef, postsRef;
     TextView reqPendingView, reqAcceptedView, reqStartedView, reqCompletedView, numReviewsView;
     AppCompatRatingBar ratingBar;
@@ -149,15 +149,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     ratingBar.setRating(0f);
                 }
                 if (snapshot.child("walker_reviews").exists()){
-                    String txt = "(" + snapshot.child("walker_reviews").getValue(int.class) + ")";
+                    String txt = "(" + snapshot.child("walker_reviews").getValue(int.class).toString() + ")";
                     numReviewsView.setText(txt);
                 }
                 if (snapshot.child("currentpost").exists()){
-                    statusSwitch.setChecked(true);
                     postKey = snapshot.child("currentpost").getValue(String.class);
+                    statusSwitch.setChecked(true);
                 } else {
+                    postKey = "";
                     statusSwitch.setChecked(false);
-                    postKey = null;
                 }
             }
 
@@ -253,39 +253,42 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!isChecked) {
-                    if (postKey != null && !postKey.equals("")){
+                    if (!postKey.isEmpty()){
                         postsRef.child(postKey).removeValue();
                         geoFire.removeLocation(postKey);
                         currentUserRef.child("currentpost").removeValue();
+                        postKey = "";
                     }
                 } else {
-                    if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            final String lat = String.valueOf(location.getLatitude());
-                            final String lng = String.valueOf(location.getLongitude());
-                            final DatabaseReference postRef = postsRef.push();
-                            postKey = postRef.getKey();
-                            postRef.setValue(new WalkerPost(currentUid, "", "", lat, lng))
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            geoFire.setLocation(postRef.getKey(), new GeoLocation(Double.parseDouble(lat),Double.parseDouble(lng)));
-                                        }
-                                    });
-                            currentUserRef.child("currentpost").setValue(postKey);
+                    if (postKey.isEmpty()){
+                        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            // TODO: Consider calling
+                            //    ActivityCompat#requestPermissions
+                            // here to request the missing permissions, and then overriding
+                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                            //                                          int[] grantResults)
+                            // to handle the case where the user grants the permission. See the documentation
+                            // for ActivityCompat#requestPermissions for more details.
+                            return;
                         }
-                    });
+                        mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                final String lat = String.valueOf(location.getLatitude());
+                                final String lng = String.valueOf(location.getLongitude());
+                                final DatabaseReference postRef = postsRef.push();
+                                postKey = postRef.getKey();
+                                postRef.setValue(new WalkerPost(currentUid, "", "", lat, lng))
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                geoFire.setLocation(postRef.getKey(), new GeoLocation(Double.parseDouble(lat),Double.parseDouble(lng)));
+                                            }
+                                        });
+                                currentUserRef.child("currentpost").setValue(postKey);
+                            }
+                        });
+                    }
                 }
             }
         });
