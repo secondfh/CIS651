@@ -79,6 +79,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private LocationRequest mLocationRequest;
     private GeoQuery geoQuery = null;
     private GoogleMap mMap;
+    final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/geofire");
+    final GeoFire geoFire = new GeoFire(ref);
 
     public static class WalkerPost {
         public String uid;
@@ -124,41 +126,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         currentUserRef = database.getReference("Users").child(currentUid);
         requestsRef = database.getReference("Requests");
         postsRef = database.getReference("Posts");
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setSmallestDisplacement(20);
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-        builder.addLocationRequest(mLocationRequest);
-        LocationSettingsRequest locationSettingsRequest = builder.build();
-        SettingsClient settingsClient = LocationServices.getSettingsClient(mContext);
-        settingsClient.checkLocationSettings(locationSettingsRequest);
-        locationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-                Location lastLocation = locationResult.getLastLocation();
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude())).zoom(14).build();
-                //mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }
-        };
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.walker_map);
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
-        if (mapFragment != null)
-            mapFragment.getMapAsync(this);
-
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(mContext, "We need permission to access your location.", Toast.LENGTH_SHORT).show();
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_FOR_LOCATION);
-            return;
-        }
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest, locationCallback, Looper.getMainLooper());
     }
 
     @Override
@@ -241,6 +208,42 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setSmallestDisplacement(20);
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+        LocationSettingsRequest locationSettingsRequest = builder.build();
+        SettingsClient settingsClient = LocationServices.getSettingsClient(mContext);
+        settingsClient.checkLocationSettings(locationSettingsRequest);
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                Location lastLocation = locationResult.getLastLocation();
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude())).zoom(14).build();
+                if (mMap != null)
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            }
+        };
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.walker_map);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(mContext);
+        if (mapFragment != null)
+            mapFragment.getMapAsync(this);
+
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(mContext, "We need permission to access your location.", Toast.LENGTH_SHORT).show();
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_FOR_LOCATION);
+            return root;
+        }
+        mFusedLocationClient.requestLocationUpdates(mLocationRequest, locationCallback, Looper.getMainLooper());
         return root;
     }
 
@@ -252,6 +255,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                 if (!isChecked) {
                     if (postKey != null && !postKey.equals("")){
                         postsRef.child(postKey).removeValue();
+                        geoFire.removeLocation(postKey);
                         currentUserRef.child("currentpost").removeValue();
                     }
                 } else {
@@ -270,9 +274,15 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                         public void onSuccess(Location location) {
                             final String lat = String.valueOf(location.getLatitude());
                             final String lng = String.valueOf(location.getLongitude());
-                            DatabaseReference postRef = postsRef.push();
+                            final DatabaseReference postRef = postsRef.push();
                             postKey = postRef.getKey();
-                            postRef.setValue(new WalkerPost(currentUid, "", "", lat, lng));
+                            postRef.setValue(new WalkerPost(currentUid, "", "", lat, lng))
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            geoFire.setLocation(postRef.getKey(), new GeoLocation(Double.parseDouble(lat),Double.parseDouble(lng)));
+                                        }
+                                    });
                             currentUserRef.child("currentpost").setValue(postKey);
                         }
                     });
