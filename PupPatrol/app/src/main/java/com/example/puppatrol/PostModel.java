@@ -9,12 +9,17 @@ public class PostModel{
     public String url;
     public String date;
     public Marker m;
-    public PostModel(String uid, String description, String url, String date, String key, Marker _m) {
+    public Float rating;
+    public  String lat, longi;
+    public PostModel(String uid, String description, String url, String date, String key, Marker _m, String lat, String longi) {
         this.uid=uid;
         this.description=description;
         this.url=url;
         this.date=date;
         this.postKey=key;
         this.m = _m;
+        this.rating = rating;
+        this.lat = lat;
+        this.longi = longi;
     }
 }

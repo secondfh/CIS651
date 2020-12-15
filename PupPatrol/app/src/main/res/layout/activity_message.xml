@@ -14,7 +14,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/Theme.AppCompat.NoActionBar">
+
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -41,10 +42,6 @@
         android:padding="5dp"
         android:id="@+id/bottom"
         android:layout_alignParentBottom="true">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorAccent"></View>
 
         <EditText
             android:layout_width="match_parent"
