@@ -3,11 +3,9 @@ package com.example.puppatrol;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.puppatrol.ui.walker.HistoryFragment;
+import com.example.puppatrol.ui.walker.ReviewsFragment;
 import com.example.puppatrol.ui.walker.HomeFragment;
 import com.example.puppatrol.ui.walker.RequestsFragment;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.ActionBar;
@@ -19,10 +17,6 @@ import com.example.puppatrol.ui.walker.WalkerPagerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class WalkerActivity2 extends AppCompatActivity {
 
@@ -51,10 +45,7 @@ public class WalkerActivity2 extends AppCompatActivity {
     }
 
     private void setupViewPager(){
-        mWalkerPagerAdapter = new WalkerPagerAdapter(this, getSupportFragmentManager());
-        mWalkerPagerAdapter.addPage(getString(R.string.walker_menu_home), new HomeFragment());
-        mWalkerPagerAdapter.addPage(getString(R.string.walker_menu_requests), new RequestsFragment());
-        mWalkerPagerAdapter.addPage(getString(R.string.walker_menu_history), new HistoryFragment());
+        mWalkerPagerAdapter = new WalkerPagerAdapter(getSupportFragmentManager());
         mViewPager = findViewById(R.id.walker_view_pager);
         mViewPager.setAdapter(mWalkerPagerAdapter);
         mViewPager.setPageTransformer(true, new MyPageTransformer());
