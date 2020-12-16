@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,53 +11,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
-<!--
-        <TextView
-            android:id="@+id/walker_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:minHeight="?actionBarSize"
-            android:padding="@dimen/appbar_padding"
-            android:text="@string/app_name_walker"
-            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
--->
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/walker_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="?colorPrimaryDark"/>
+            android:layout_height="?actionBarSize"/>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/walker_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimaryDark"
-            android:layout_gravity="center"
-            style="@style/CustomTabLayout"
-            app:tabGravity="fill"
-            app:tabMode="fixed">
-<!--
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/walker_tab_home"
-                android:layout_width="wrap_content"
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/walker_tabs"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/walker_menu_home"
-                android:icon="@drawable/icon_home_white"/>
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/walker_tab_requests"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/walker_menu_requests"
-                android:icon="@drawable/icon_list_white"/>
-            <com.google.android.material.tabs.TabItem
-                android:id="@+id/walker_tab_history"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/walker_menu_history"
-                android:icon="@drawable/icon_history_white"/>
--->
-        </com.google.android.material.tabs.TabLayout>
+                style="@style/CustomTabLayout"
+                app:tabGravity="fill"
+                app:tabMode="fixed">
+
+    </com.google.android.material.tabs.TabLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -64,6 +33,7 @@
         android:id="@+id/walker_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+    </androidx.viewpager.widget.ViewPager>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

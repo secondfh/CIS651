@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,13 +24,10 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-import com.example.puppatrol.PostModel;
 import com.example.puppatrol.R;
-import com.example.puppatrol.WalkerActivity2;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
-import com.firebase.geofire.GeoQueryDataEventListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -40,12 +39,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,12 +51,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Date;
-import java.util.List;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private static final int REQUEST_FOR_LOCATION = 0012;
@@ -72,6 +65,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     TextView reqPendingView, reqAcceptedView, reqStartedView, reqCompletedView, numReviewsView;
     AppCompatRatingBar ratingBar;
     SwitchCompat statusSwitch, availabilitySwitch;
+    LinearLayout settingsShowHideLayout, settingsContentLayout;
+    ImageView settingsShowHideImg;
     private int reqPending, reqAccepted, reqStarted, reqCompleted;
     private Context mContext;
     private LocationCallback locationCallback;
@@ -130,7 +125,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_walker_home2, container, false);
+        View root = inflater.inflate(R.layout.fragment_walker_home, container, false);
         reqPendingView = root.findViewById(R.id.walker_home_pending_requests);
         reqAcceptedView = root.findViewById(R.id.walker_home_accepted_requests);
         reqStartedView = root.findViewById(R.id.walker_home_started_requests);
@@ -139,6 +134,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         ratingBar = root.findViewById(R.id.walker_home_rating_bar);
         statusSwitch = root.findViewById(R.id.walker_switch_status);
         availabilitySwitch = root.findViewById(R.id.walker_switch_availability);
+        settingsShowHideLayout = root.findViewById(R.id.walker_settings_show_hide_layout);
+        settingsContentLayout = root.findViewById(R.id.walker_settings_content_layout);
+        settingsShowHideImg = root.findViewById(R.id.walker_settings_show_hide_img);
+
+        settingsContentLayout.setVisibility(View.GONE);
+        settingsShowHideImg.setImageResource(R.drawable.icon_arrow_up);
 
         currentUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -178,7 +179,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                         reqAccepted++;
                     if (status.equals(resources.getString(R.string.request_started)))
                         reqStarted++;
-                    if (status.equals(resources.getString(R.string.request_complete)))
+                    if (status.equals(resources.getString(R.string.request_completed)))
                         reqCompleted++;
                     reqPendingView.setText(Integer.toString(reqPending));
                     reqAcceptedView.setText(Integer.toString(reqAccepted));
@@ -249,6 +250,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        settingsShowHideImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (settingsContentLayout.getVisibility() == View.GONE){
+                    settingsContentLayout.setVisibility(View.VISIBLE);
+                    settingsShowHideImg.setImageResource(R.drawable.icon_arrow_down);
+                } else {
+                    settingsContentLayout.setVisibility(View.GONE);
+                    settingsShowHideImg.setImageResource(R.drawable.icon_arrow_up);
+                }
+            }
+        });
+
         statusSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -348,5 +362,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
         mMap.setMyLocationEnabled(true);
+    }
+
+    private void setSettingsVisibility(Boolean isVisible){
+
     }
 }

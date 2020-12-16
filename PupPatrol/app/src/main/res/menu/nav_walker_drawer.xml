@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:showIn="navigation_view">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/walker_nav_home"
-            android:icon="@drawable/icon_home_white"
+            android:icon="@drawable/icon_home"
             android:title="@string/walker_menu_home" />
         <item
             android:id="@+id/walker_nav_requests"
-            android:icon="@drawable/icon_list_white"
-            android:title="@string/walker_menu_requests" />
+            android:icon="@drawable/icon_list"
+            android:title="@string/walker_menu_walks" />
         <item
-            android:id="@+id/walker_nav_history"
-            android:icon="@drawable/icon_history_white"
-            android:title="@string/walker_menu_history" />
+            android:id="@+id/walker_nav_reviews"
+            android:icon="@drawable/icon_history"
+            android:title="@string/walker_menu_reviews" />
+        <item
+            android:id="@+id/walker_nav_status"
+            android:icon="@drawable/icon_location_off"
+            android:title="@string/walker_setting_status"
+            app:actionLayout="@layout/nav_layout_walker_status_switch"/>
+        <item
+            android:id="@+id/walker_nav_available"
+            android:icon="@drawable/icon_location_unavailable"
+            android:title="@string/walker_setting_available"
+            app:actionLayout="@layout/nav_layout_walker_available_switch"/>
     </group>
 </menu>

@@ -8,8 +8,8 @@
 
     // Walker activity strings
     <string name="walker_menu_home">Home</string>
-    <string name="walker_menu_requests">Requests</string>
-    <string name="walker_menu_history">History</string>
+    <string name="walker_menu_walks">Walks</string>
+    <string name="walker_menu_reviews">Reviews</string>
     <string name="walker_setting_status">Show as Walker</string>
     <string name="walker_setting_available">Available for requests</string>
     <string name="walker_home_pending_requests">Pending requests</string>
@@ -24,6 +24,6 @@
     <string name="request_accepted">Accepted</string>
     <string name="request_rejected">Rejected</string>
     <string name="request_started">Started</string>
-    <string name="request_complete">Complete</string>
+    <string name="request_completed">Completed</string>
 
 </resources>
