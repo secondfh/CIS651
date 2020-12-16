@@ -1,39 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:card_view="http://schemas.android.com/tools"
-    android:layout_marginTop="10dp"
     android:layout_marginLeft="10dp"
+    android:layout_marginTop="10dp"
     android:layout_marginRight="10dp"
+    app:cardBackgroundColor="#2B2B2B"
+
     card_view:cardCornerRadius="10dp"
     card_view:cardElevation="5dp"
-    card_view:cardUseCompatPadding="true"
-
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    card_view:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:padding="5dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="3">
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:weightSum="3"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <ImageView
             android:id="@+id/postImg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"></ImageView>
+
         <ImageButton
+            android:id="@+id/profilePic"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/profilePic"
-            app:layout_constraintTop_toBottomOf="@+id/postImg"/>
+            app:layout_constraintTop_toBottomOf="@+id/postImg" />
 
         <Button
             android:id="@+id/requestbtn"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+
+            android:background="@drawable/signup_button"
             android:onClick="Request"
             android:text="Request"
             app:layout_constraintEnd_toEndOf="parent"
@@ -41,36 +46,32 @@
             app:layout_constraintLeft_toRightOf="@+id/postImg"
             app:layout_constraintRight_toLeftOf="parent"
             app:layout_constraintStart_toEndOf="@+id/profilePic"
-            card_view:layout_editor_absoluteY="-2dp"
-            card_view:ignore="MissingConstraints" />
+            card_view:ignore="MissingConstraints"
+            card_view:layout_editor_absoluteY="-2dp" />
 
         <TextView
             android:id="@+id/fname_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/profilePic"
-            >
-        </TextView>
+            app:layout_constraintTop_toBottomOf="@+id/profilePic"></TextView>
+
         <TextView
             android:id="@+id/email_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/fname_view"
-            >
-        </TextView>
+            app:layout_constraintTop_toBottomOf="@+id/fname_view"></TextView>
+
         <TextView
-        android:id="@+id/phone_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/email_view"
-        >
-        </TextView>
+            android:id="@+id/phone_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/email_view"></TextView>
+
         <TextView
             android:id="@+id/date_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/phone_view">
-        </TextView>
+            app:layout_constraintTop_toBottomOf="@+id/phone_view"></TextView>
 
         <RatingBar
             android:id="@+id/rating"
@@ -88,16 +89,16 @@
             android:id="@+id/distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"></TextView>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"></TextView>
 
         <TextView
             android:id="@+id/review_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="@+id/rating"
+            android:textColor="@android:color/holo_blue_dark"
             app:layout_constraintBottom_toTopOf="@+id/bar"
-            android:textColor="@android:color/holo_blue_dark"/>
+            app:layout_constraintLeft_toRightOf="@+id/rating" />
 
         <View
             android:id="@+id/bar"
@@ -108,8 +109,7 @@
             card_view:layout_editor_absoluteX="5dp"></View>
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.cardview.widget.CardView>

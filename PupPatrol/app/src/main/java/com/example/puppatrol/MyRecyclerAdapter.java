@@ -1,10 +1,13 @@
 package com.example.puppatrol;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -16,20 +19,24 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
 
+import android.os.Handler;
 import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -71,7 +78,7 @@ public class MyRecyclerAdapter
 
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference usersRef = database.getReference("Posts");
-	DatabaseReference requestRef = database.getReference("Requests");
+    DatabaseReference requestRef = database.getReference("Requests");
     ChildEventListener usersRefListener;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -80,7 +87,7 @@ public class MyRecyclerAdapter
     private RecyclerView r;
     private Marker currentMarker = null;
     private ItemClickListener itemClickListener;
-	public String refKey;
+    public String refKey;
 
 
     public MyRecyclerAdapter(HashMap<String, PostModel> kp, List<String> kl, ItemClickListener _itemClickListener, RecyclerView recyclerView) {
@@ -222,23 +229,77 @@ public class MyRecyclerAdapter
                 holder.reqbtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
-                        String time = null;
-                        String status = r.getContext().getResources().getString(R.string.request_created);
+                        final String time = null;
+                        final String status = r.getContext().getResources().getString(R.string.request_created);
 
                         if(holder.reqbtn.getText().toString().equals("Request") ){
-                            RequestInfo(currentUser.getUid(), time , status, u.uid);
-                            holder.reqbtn.setText("Cancel");}
+                            final EditText offer = new EditText(r.getContext());
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(r.getContext());
+                            offer.setHint("Enter Offer and Walk Duration");
+                            builder.setView(offer);
+                            builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    final String offer1 = offer.getText().toString();
+                                    RequestInfo(currentUser.getUid(), u.postKey , status, u.uid, offer1);
+                                }
+                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                            holder.reqbtn.setText("Cancel");
+
+                        }
                         else{
                             if(holder.reqbtn.getText().toString().equals("Cancel")){
                                 holder.reqbtn.setText("Request");
-                                requestRef.child(refKey).removeValue();
+                                requestRef.child(u.postKey).removeValue();
 
                             }
-                            }
+                        }
+
                     }
                 });
 
+                holder.rref = requestRef.child(u.postKey);
+                holder.rref.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(!snapshot.exists()){
+                            //do nothing
+                        }
+                        else{if(snapshot.child("status").getValue().toString().equals("accepted")){
+                            holder.reqbtn.setText("In Progress");
+                            holder.reqbtn.setBackgroundColor(Color.parseColor("#32AD03"));
+                        }else{
+                            if(snapshot.child("status").getValue().toString().equals("rejected")){
+
+                                requestRef.child(u.postKey).removeValue();
+                                Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        holder.reqbtn.setText("Request");
+                                        holder.reqbtn.setBackgroundResource(R.drawable.signup_button);
+
+
+                                    }
+                                }, 2000);
+                                holder.reqbtn.setText("Rejected");
+                                holder.reqbtn.setBackgroundColor(Color.parseColor("#FF0000"));
+
+
+                            }
+                        }
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
 
             }
@@ -258,17 +319,22 @@ public class MyRecyclerAdapter
                 return keyList.size();
             }
 
-            public void RequestInfo(String client, String requestDate, String status, String walker) {
+            public void RequestInfo(String client, String requestKey, String status, String walker, String offer) {
 
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                //DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                 HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.put("client", client);
                 hashMap.put("timestamp", ServerValue.TIMESTAMP);
                 hashMap.put("status", status);
                 hashMap.put("walker", walker);
+                hashMap.put("offer", offer);
 
-                refKey = reference.child("Requests").push().getKey();
-                requestRef.child(refKey).setValue(hashMap);
+                //refKey = reference.child("Requests").push().getKey();
+                requestRef.child(requestKey).setValue(hashMap);
+
+            }
+
+            public void statusChange(){
 
             }
 
@@ -287,7 +353,7 @@ public class MyRecyclerAdapter
                 public RatingBar ratingBar;
                 public Button reqbtn;
                 public String lati, longit;
-                DatabaseReference uref, wref;
+                DatabaseReference uref, rref;
                 ValueEventListener urefListener;
 
                 public ViewHolder(View v){
