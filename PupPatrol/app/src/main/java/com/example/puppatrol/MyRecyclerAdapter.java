@@ -321,7 +321,7 @@ public class MyRecyclerAdapter
 
             public void RequestInfo(String client, String requestKey, String status, String walker, String offer) {
 
-                //DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                
                 HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.put("client", client);
                 hashMap.put("timestamp", ServerValue.TIMESTAMP);
@@ -329,7 +329,7 @@ public class MyRecyclerAdapter
                 hashMap.put("walker", walker);
                 hashMap.put("offer", offer);
 
-                //refKey = reference.child("Requests").push().getKey();
+                
                 requestRef.child(requestKey).setValue(hashMap);
 
             }
