@@ -241,7 +241,7 @@ public class MyRecyclerAdapter
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     final String offer1 = offer.getText().toString();
-                                    RequestInfo(currentUser.getUid(), u.postKey , status, u.uid, offer1);
+                                    RequestInfo(currentUser.getUid(), u.postKey , status, u.uid, offer1, String.valueOf(lat), String.valueOf(longi));
                                 }
                             });
                             AlertDialog alert = builder.create();
@@ -289,6 +289,10 @@ public class MyRecyclerAdapter
                                 holder.reqbtn.setBackgroundColor(Color.parseColor("#FF0000"));
 
 
+                            }else{
+                                if(snapshot.child("status").getValue().toString().equals("Created")){
+                                    holder.reqbtn.setText("Cancel");
+                                }
                             }
                         }
 
@@ -319,7 +323,7 @@ public class MyRecyclerAdapter
                 return keyList.size();
             }
 
-            public void RequestInfo(String client, String requestKey, String status, String walker, String offer) {
+            public void RequestInfo(String client, String requestKey, String status, String walker, String offer, String lat, String lng) {
 
                 
                 HashMap<String, Object> hashMap = new HashMap<>();
@@ -328,7 +332,8 @@ public class MyRecyclerAdapter
                 hashMap.put("status", status);
                 hashMap.put("walker", walker);
                 hashMap.put("offer", offer);
-
+				hashMap.put("clientlat", lat);
+                hashMap.put("clientlong", lng);
                 
                 requestRef.child(requestKey).setValue(hashMap);
 
