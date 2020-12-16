@@ -21,7 +21,6 @@
 
     // Request status
     <string name="request_created">Created</string>
-    <string name="request_cancelled">Cancelled</string>
     <string name="request_accepted">Accepted</string>
     <string name="request_rejected">Rejected</string>
     <string name="request_started">Started</string>
