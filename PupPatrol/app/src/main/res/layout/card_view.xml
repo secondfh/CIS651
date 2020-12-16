@@ -37,7 +37,6 @@
             android:id="@+id/requestbtn"
             android:layout_width="100dp"
             android:layout_height="40dp"
-
             android:background="@drawable/signup_button"
             android:onClick="Request"
             android:text="Request"
