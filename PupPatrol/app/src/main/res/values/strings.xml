@@ -19,11 +19,15 @@
     <string name="walker_home_avg_rating">Average rating</string>
 
 
-    // Request status
+    // Request status and action
     <string name="request_created">Created</string>
     <string name="request_accepted">Accepted</string>
     <string name="request_rejected">Rejected</string>
     <string name="request_started">Started</string>
     <string name="request_completed">Completed</string>
-
+    <string name="action_request">Request</string>
+    <string name="action_accept">Accept</string>
+    <string name="action_reject">Reject</string>
+    <string name="action_start">Start</string>
+    <string name="action_finish">Finish</string>
 </resources>

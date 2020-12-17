@@ -94,11 +94,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             this.lng = Lng;
             this.available = true;
         }
-
-        public WalkerPost() {
-
-        }
-
     }
 
     public HomeFragment() {
