@@ -130,10 +130,10 @@ public class RequestListAdapter extends BaseExpandableListAdapter {
                         //User u = (User) snapshot.getValue();
                         nameView.setText(snapshot.child("displayname").getValue(String.class));
                         offerView.setText(walkRequest.getOffer());
-                        if (locationSet) {
+                        if (locationSet && walkRequest.getClientlat() != null && walkRequest.getClientlong() != null) {
                             float result[] = new float[1];
-                            Location.distanceBetween(myLat, myLng, Location.convert(walkRequest.getLat()),
-                                    Location.convert(walkRequest.getLng()), result);
+                            Location.distanceBetween(myLat, myLng, Location.convert(walkRequest.getClientlat()),
+                                    Location.convert(walkRequest.getClientlong()), result);
                             double miles = result[0] / 160.9344f;
                             String dist = format2d.format(miles) + " mi";
                             distanceView.setText(dist);
@@ -180,12 +180,12 @@ public class RequestListAdapter extends BaseExpandableListAdapter {
                         }
                         /* If current status is "Started" */
                         if (status.compareToIgnoreCase(res.getString(R.string.request_started)) == 0){
-                            actionBtn2.setText(res.getString(R.string.action_reject));
+                            actionBtn2.setText(res.getString(R.string.action_finish));
                             actionBtn2.setVisibility(View.VISIBLE);
                             actionBtn2.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    statusRef.setValue(res.getString(R.string.request_rejected));
+                                    statusRef.setValue(res.getString(R.string.request_completed));
                                 }
                             });
                             actionBtn1.setVisibility(View.GONE);

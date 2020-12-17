@@ -120,7 +120,7 @@ public class RequestsFragment extends Fragment{
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String requestKey = snapshot.getKey();
                 WalkRequest request = snapshot.getValue(WalkRequest.class);
-                if (request.getWalker().equals(currentUserId)){
+                if (request.getWalker().equals(currentUserId) && statusValue.contains(request.getStatus())){
                     requestGroups.get(statusValue.indexOf(request.getStatus())).addItem(new RequestListItem(requestKey, request));
                     requestListAdapter.notifyDataSetChanged();
                 }
@@ -130,7 +130,7 @@ public class RequestsFragment extends Fragment{
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String requestKey = snapshot.getKey();
                 WalkRequest request = snapshot.getValue(WalkRequest.class);
-                if (request.getWalker().equals(currentUserId)) {
+                if (request.getWalker().equals(currentUserId) && statusValue.contains(request.getStatus())) {
                     int group = findRequestGroup(requestKey);
                     /* Should always exist for onChildChanged event */
                     if (group != REQ_NOT_FOUND) {
@@ -145,7 +145,7 @@ public class RequestsFragment extends Fragment{
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 String requestKey = snapshot.getKey();
                 WalkRequest request = snapshot.getValue(WalkRequest.class);
-                if (request.getWalker().equals(currentUserId)){
+                if (request.getWalker().equals(currentUserId) && statusValue.contains(request.getStatus())){
                     int group = findRequestGroup(requestKey);
                     /* Should always exist for onChildRemoved event */
                     if (group != REQ_NOT_FOUND){
