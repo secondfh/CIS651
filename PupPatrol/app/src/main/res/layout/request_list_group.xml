@@ -4,12 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="?attr/colorBackgroundFloating">
+    android:paddingVertical="4dp"
+    android:paddingLeft="?android:expandableListPreferredItemPaddingLeft"
+    android:background="#303030">
 
     <TextView
         android:id="@+id/request_list_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="?android:expandableListPreferredItemPaddingLeft"
-        style="@style/DarkBubbleText"/>
+        android:text="test"
+        android:textColor="@color/offwhite"
+        android:textSize="24sp"/>
 </LinearLayout>

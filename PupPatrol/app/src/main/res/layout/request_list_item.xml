@@ -1,13 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/offwhite">
+    android:padding="10dp"
+    android:orientation="horizontal"
+    android:background="#424242">
 
-    <TextView
-        android:id="@+id/request_list_item"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="?android:attr/expandableListPreferredChildPaddingLeft"/>
+        android:orientation="vertical"
+        tools:ignore="UseCompoundDrawables">
+        <ImageView
+            android:id="@+id/request_profimg"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/icon_prof_generic"/>
+        <TextView
+            android:id="@+id/request_distance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:textAlignment="center"
+            android:textSize="12sp"
+            android:text="13.9 mi"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_marginStart="5dp">
+        <TextView
+            android:id="@+id/request_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:textSize="20sp"
+            android:text="Client Name"/>
+        <TextView
+        android:id="@+id/request_offer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textSize="16sp"
+        android:text="Offer"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+            <Button
+                android:id="@+id/request_action_btn1"
+                android:layout_width="100dp"
+                android:layout_height="32dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/btn_ok"
+                android:textColor="@android:color/black"
+                android:text="Action1"/>
+            <Button
+                android:id="@+id/request_action_btn2"
+                android:layout_width="100dp"
+                android:layout_height="32dp"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/btn_notok"
+                android:textColor="@android:color/black"
+                android:text="Action2"/>
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
