@@ -29,11 +29,6 @@ public class WalkerPagerAdapter extends FragmentPagerAdapter {
         mFragmentTitleList.add("Reviews");
     }
 
-    public void addPage(String title, Fragment fragment){
-        mFragmentTitleList.add(title);
-        mFragmentList.add(fragment);
-    }
-
     @NonNull
     @Override
     public Fragment getItem(int position) {

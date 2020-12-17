@@ -1,25 +1,55 @@
 package com.example.puppatrol;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.DataSetObserver;
+import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
+import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.HashMap;
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RequestListAdapter extends BaseExpandableListAdapter {
-    private Context mContext;
-    private List<String> listGroup;
-    private HashMap<String, List<String>> listData;
+    private final Context mContext;
+    private final Resources res;
+    private final FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private List<RequestListGroup> requestGroups;
+    private double myLat, myLng;
+    private boolean locationSet = false;
+    DecimalFormat format2d = new DecimalFormat("#.##");
 
-    public RequestListAdapter(Context context, List<String> listGroup, HashMap<String, List<String>> listData){
-        mContext = context;
-        this.listGroup = listGroup;
-        this.listData = listData;
+    public RequestListAdapter(ExpandableListView listView, List<RequestListGroup> requestGroups){
+        mContext = listView.getContext();
+        res = mContext.getResources();
+        if (requestGroups == null)
+            this.requestGroups = new ArrayList<>();
+        else
+            this.requestGroups = requestGroups;
+
+    }
+
+    public void updateMyLocation(double lat, double lng){
+        myLat = lat;
+        myLng = lng;
+        locationSet = true;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -33,13 +63,16 @@ public class RequestListAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public Object getGroup(int groupPosition) {
-        return listGroup.get(groupPosition);
+    public RequestListGroup getGroup(int groupPosition) {
+        if (requestGroups.size() > 0)
+            return requestGroups.get(groupPosition);
+        else
+            return null;
     }
 
     @Override
     public int getGroupCount() {
-        return listGroup.size();
+        return requestGroups.size();
     }
 
     @Override
@@ -49,31 +82,23 @@ public class RequestListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        final String groupText = (String) getGroup(groupPosition);
         if (convertView == null){
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.request_list_group, null);
+            LayoutInflater inflater = LayoutInflater.from(mContext);
+            convertView = inflater.inflate(R.layout.request_list_group, parent, false);
         }
-        TextView textView = (TextView) convertView.findViewById(R.id.request_list_group);
-        textView.setText(groupText);
+        TextView groupTitle = convertView.findViewById(R.id.request_list_group);
+        groupTitle.setText(requestGroups.get(groupPosition).getGroupName());
         return convertView;
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition) {
-        Object object = listData.get(listGroup.get(groupPosition));
-        if (object != null)
-            return listData.get(listGroup.get(groupPosition)).get(childPosition);
-        else
-            return null;
+    public RequestListItem getChild(int groupPosition, int childPosition) {
+        return requestGroups.get(groupPosition).getItem(childPosition);
     }
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        if (listData.get(listGroup.get(groupPosition)) != null)
-            return listData.get(listGroup.get(groupPosition)).size();
-        else
-            return 0;
+        return requestGroups.get(groupPosition).size();
     }
 
     @Override
@@ -83,14 +108,100 @@ public class RequestListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        final String childText = (String) getChild(groupPosition, childPosition);
-        if (convertView == null){
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.request_list_item, null);
+        RequestListItem request = requestGroups.get(groupPosition).getItem(childPosition);
+        if (request != null){
+            final View view = (convertView != null ?
+                    convertView : LayoutInflater.from(mContext).inflate(R.layout.request_list_item, parent, false));
+            final String requestKey = request.getKey();
+            final WalkRequest walkRequest = request.getRequest();
+            final ImageView profImgView = view.findViewById(R.id.request_profimg);
+            final TextView distanceView = view.findViewById(R.id.request_distance);
+            final TextView nameView = view.findViewById(R.id.request_name);
+            final TextView offerView = view.findViewById(R.id.request_offer);
+            final Button actionBtn1 = view.findViewById(R.id.request_action_btn1);
+            final Button actionBtn2 = view.findViewById(R.id.request_action_btn2);
+            actionBtn1.setVisibility(View.GONE);
+            actionBtn2.setVisibility(View.GONE);
+            DatabaseReference clientRef = database.getReference("Users").child(walkRequest.getClient());
+            clientRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        //User u = (User) snapshot.getValue();
+                        nameView.setText(snapshot.child("displayname").getValue(String.class));
+                        offerView.setText(walkRequest.getOffer());
+                        if (locationSet) {
+                            float result[] = new float[1];
+                            Location.distanceBetween(myLat, myLng, Location.convert(walkRequest.getLat()),
+                                    Location.convert(walkRequest.getLng()), result);
+                            double miles = result[0] / 160.9344f;
+                            String dist = format2d.format(miles) + " mi";
+                            distanceView.setText(dist);
+                        } else {
+                            distanceView.setText("");
+                        }
+                        if(snapshot.child("url").exists()){
+                            Picasso.get().load(snapshot.child("url").getValue().toString()).into(profImgView);
+                        } else {
+                            profImgView.setImageResource(R.drawable.icon_prof_generic);
+                        }
+                        String status = walkRequest.getStatus();
+                        final DatabaseReference statusRef = database.getReference("Requests").child(requestKey).child("status");
+                        /* If current status is "Created" */
+                        if (status.compareToIgnoreCase(res.getString(R.string.request_created)) == 0) {
+                            actionBtn1.setText(res.getString(R.string.action_accept));
+                            actionBtn1.setVisibility(View.VISIBLE);
+                            actionBtn1.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    statusRef.setValue(res.getString(R.string.request_accepted));
+                                }
+                            });
+                            actionBtn2.setText(res.getString(R.string.action_reject));
+                            actionBtn2.setVisibility(View.VISIBLE);
+                            actionBtn2.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    statusRef.setValue(res.getString(R.string.request_rejected));
+                                }
+                            });
+                        }
+                        /* If current status is "Accepted" */
+                        if (status.compareToIgnoreCase(res.getString(R.string.request_accepted)) ==0){
+                            actionBtn1.setText(res.getString(R.string.action_start));
+                            actionBtn1.setVisibility(View.VISIBLE);
+                            actionBtn1.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    statusRef.setValue(res.getString(R.string.request_started));
+                                }
+                            });
+                            actionBtn2.setVisibility(View.GONE);
+                        }
+                        /* If current status is "Started" */
+                        if (status.compareToIgnoreCase(res.getString(R.string.request_started)) == 0){
+                            actionBtn2.setText(res.getString(R.string.action_reject));
+                            actionBtn2.setVisibility(View.VISIBLE);
+                            actionBtn2.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    statusRef.setValue(res.getString(R.string.request_rejected));
+                                }
+                            });
+                            actionBtn1.setVisibility(View.GONE);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+            return view;
+        } else {
+            return null;
         }
-        TextView textView = (TextView) convertView.findViewById(R.id.request_list_item);
-        textView.setText(childText);
-        return convertView;
     }
 
     @Override
@@ -100,7 +211,7 @@ public class RequestListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return true;
+        return false;
     }
 
     @Override
@@ -132,4 +243,5 @@ public class RequestListAdapter extends BaseExpandableListAdapter {
     public long getCombinedGroupId(long groupId) {
         return 0;
     }
+
 }
