@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Rating;
 import android.net.Uri;
 
 import java.text.DecimalFormat;
@@ -87,7 +88,9 @@ public class MyRecyclerAdapter
     private RecyclerView r;
     private Marker currentMarker = null;
     private ItemClickListener itemClickListener;
-    public String refKey;
+    public Boolean check;
+    public long totalReviews;
+    public double avgRate;
 
 
     public MyRecyclerAdapter(HashMap<String, PostModel> kp, List<String> kl, ItemClickListener _itemClickListener, RecyclerView recyclerView) {
@@ -143,8 +146,8 @@ public class MyRecyclerAdapter
             }
         });
 
-        double lat = locationGPS.getLatitude();
-        double longi = locationGPS.getLongitude();
+        final double lat = locationGPS.getLatitude();
+        final double longi = locationGPS.getLongitude();
         float[] result = new float[1];
         Location.distanceBetween(lat, longi, Double.parseDouble(u.lat),Double.parseDouble(u.longi), result);
         double conv = result[0] / 1609;
@@ -178,22 +181,39 @@ public class MyRecyclerAdapter
                 });
 
                 holder.uref = database.getReference("Users").child(uid);
-                holder.uref.addValueEventListener(new ValueEventListener() {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        //add if statement to handle if no rating
-                        if(!dataSnapshot.child("walker_rating").exists()){
-                            holder.ratingBar.setRating(0);}
-                        else{
-                        holder.ratingBar.setRating(Float.parseFloat(dataSnapshot.child("walker_rating").getValue().toString()));
-                        holder.reviewcount.setText("(" + dataSnapshot.child("walker_reviews").getValue().toString() + ")");
-                    }}
+                    public void run() {
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+
+                        holder.uref.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                //add if statement to handle if no rating
+                                check = dataSnapshot.child("walker_reviews").exists();
+                                if(!dataSnapshot.child("walker_rating").exists() && !dataSnapshot.child("walker_reviews").exists()){
+                                    holder.ratingBar.setRating(0);
+                                    holder.reviewcount.setText("0");
+                                }
+                                else{
+                                    holder.ratingBar.isIndicator();
+                                    holder.ratingBar.setRating(Float.parseFloat(dataSnapshot.child("walker_rating").getValue().toString()));
+                                    holder.reviewcount.setText("(" + dataSnapshot.child("walker_reviews").getValue().toString() + ")");
+                                    totalReviews = (long) dataSnapshot.child("walker_reviews").getValue();
+                                    avgRate = (double) dataSnapshot.child("walker_rating").getValue();
+                                }}
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
 
                     }
-                });
+                }, 3500);
+
 
                 holder.imageButton.setOnClickListener(new View.OnClickListener(){
 
@@ -229,7 +249,7 @@ public class MyRecyclerAdapter
                 holder.reqbtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        final String time = null;
+
                         final String status = r.getContext().getResources().getString(R.string.request_created);
 
                         if(holder.reqbtn.getText().toString().equals("Request") ){
@@ -263,15 +283,15 @@ public class MyRecyclerAdapter
                 holder.rref = requestRef.child(u.postKey);
                 holder.rref.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    public void onDataChange(@NonNull final DataSnapshot snapshot) {
                         if(!snapshot.exists()){
                             //do nothing
                         }
-                        else{if(snapshot.child("status").getValue().toString().equals("accepted")){
+                        else{if(snapshot.child("status").getValue().toString().equals("Accepted")){
                             holder.reqbtn.setText("In Progress");
                             holder.reqbtn.setBackgroundColor(Color.parseColor("#32AD03"));
                         }else{
-                            if(snapshot.child("status").getValue().toString().equals("rejected")){
+                            if(snapshot.child("status").getValue().toString().equals("Rejected")){
 
                                 requestRef.child(u.postKey).removeValue();
                                 Handler handler = new Handler();
@@ -292,6 +312,43 @@ public class MyRecyclerAdapter
                             }else{
                                 if(snapshot.child("status").getValue().toString().equals("Created")){
                                     holder.reqbtn.setText("Cancel");
+                                }else {
+                                    if(snapshot.child("status").getValue().toString().equals("Complete")){
+                                        holder.reqbtn.setText("Request");
+                                        final AlertDialog.Builder ratebuilder = new AlertDialog.Builder(r.getContext());
+                                        LinearLayout linearLayout = new LinearLayout(r.getContext());
+                                        final RatingBar newRating = new RatingBar(r.getContext());
+                                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                                        ratebuilder.setTitle("Please Rate This Walker!");
+                                        newRating.setLayoutParams(lp);
+                                        newRating.setNumStars(5);
+                                        newRating.setStepSize((float) 0.5);
+                                        linearLayout.addView(newRating);
+                                        ratebuilder.setView(linearLayout);
+                                        ratebuilder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                float totalbones = newRating.getRating();
+                                                if(check.equals(false)){
+                                                    holder.uref.child("walker_reviews").setValue(1).toString();
+                                                    holder.uref.child("walker_rating").setValue(totalbones);
+                                                } else {
+
+                                                    holder.uref.child("walker_reviews").setValue(totalReviews + 1).toString();
+                                                    holder.uref.child("walker_rating").setValue((totalbones + avgRate)/(totalReviews + 1));
+                                                }
+
+                                            }
+                                        })
+                                                .setNegativeButton("No Thanks!", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        dialogInterface.cancel();
+                                                    }
+                                                });
+                                        ratebuilder.create();
+                                        ratebuilder.show();
+                                    }
                                 }
                             }
                         }
@@ -305,6 +362,10 @@ public class MyRecyclerAdapter
                     }
                 });
 
+
+            }
+
+            public void submitRating(Float rating, Float count){
 
             }
 
@@ -325,16 +386,15 @@ public class MyRecyclerAdapter
 
             public void RequestInfo(String client, String requestKey, String status, String walker, String offer, String lat, String lng) {
 
-                
                 HashMap<String, Object> hashMap = new HashMap<>();
                 hashMap.put("client", client);
                 hashMap.put("timestamp", ServerValue.TIMESTAMP);
                 hashMap.put("status", status);
                 hashMap.put("walker", walker);
                 hashMap.put("offer", offer);
-				hashMap.put("clientlat", lat);
+                hashMap.put("clientlat", lat);
                 hashMap.put("clientlong", lng);
-                
+
                 requestRef.child(requestKey).setValue(hashMap);
 
             }
@@ -357,7 +417,6 @@ public class MyRecyclerAdapter
                 public ImageButton imageButton;
                 public RatingBar ratingBar;
                 public Button reqbtn;
-                public String lati, longit;
                 DatabaseReference uref, rref;
                 ValueEventListener urefListener;
 
@@ -373,6 +432,7 @@ public class MyRecyclerAdapter
                    reqbtn = v.findViewById(R.id.requestbtn);
                    distance = v.findViewById(R.id.distance);
                    reviewcount = v.findViewById(R.id.review_count);
+
                 }
             }
 
