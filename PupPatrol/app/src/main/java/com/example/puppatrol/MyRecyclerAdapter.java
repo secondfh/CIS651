@@ -192,17 +192,29 @@ public class MyRecyclerAdapter
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 //add if statement to handle if no rating
                                 check = dataSnapshot.child("walker_reviews").exists();
-                                if(!dataSnapshot.child("walker_rating").exists() && !dataSnapshot.child("walker_reviews").exists()){
-                                    holder.ratingBar.setRating(0);
-                                    holder.reviewcount.setText("0");
-                                }
-                                else{
+//                                if(!dataSnapshot.child("walker_rating").exists() && !dataSnapshot.child("walker_reviews").exists()){
+//                                    holder.ratingBar.setRating(0);
+//                                    holder.reviewcount.setText("0");
+//                                }
+//                                else{
+//                                    holder.ratingBar.isIndicator();
+//                                    holder.ratingBar.setRating(Float.parseFloat(dataSnapshot.child("walker_rating").getValue().toString()));
+//                                    holder.reviewcount.setText("(" + dataSnapshot.child("walker_reviews").getValue().toString() + ")");
+//                                    totalReviews = (long) dataSnapshot.child("walker_reviews").getValue();
+//                                    avgRate = (double) dataSnapshot.child("walker_rating").getValue();
+//                                }
+                                boolean hasReviews = dataSnapshot.child("walker_reviews").exists();
+                                boolean hasRating = dataSnapshot.child("walker_rating").exists();
+                                long reviews = hasReviews ? (long) dataSnapshot.child("walker_reviews").getValue() : 0;
+                                long rating = hasRating ? (long) dataSnapshot.child("walker_rating").getValue() : 0;
+                                if (hasRating) {
                                     holder.ratingBar.isIndicator();
-                                    holder.ratingBar.setRating(Float.parseFloat(dataSnapshot.child("walker_rating").getValue().toString()));
-                                    holder.reviewcount.setText("(" + dataSnapshot.child("walker_reviews").getValue().toString() + ")");
-                                    totalReviews = (long) dataSnapshot.child("walker_reviews").getValue();
-                                    avgRate = (double) dataSnapshot.child("walker_rating").getValue();
-                                }}
+                                    holder.ratingBar.setRating(Float.parseFloat(String.valueOf(rating)));
+                                }
+                                holder.reviewcount.setText("(" + String.valueOf(reviews) + ")");
+                                totalReviews = reviews;
+                                avgRate = Long.valueOf(rating).doubleValue();
+                            }
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
