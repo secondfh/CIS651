@@ -193,7 +193,7 @@ public class MyRecyclerAdapter
                                     holder.reviewcount.setText("(" + dataSnapshot.child("walker_reviews").getValue().toString() + ")");
                                     totalReviews =  dataSnapshot.child("walker_reviews").getValue().toString();
                                     totalRate =  dataSnapshot.child("total_rating").getValue().toString();
-                                    u.rating = dataSnapshot.child("walker_rating").getValue().toString();
+                                    
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
