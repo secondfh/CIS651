@@ -80,7 +80,7 @@ public class SignupLogin extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersRef = database.getReference("Users");
         usersRef.child(currentUser.getUid()).setValue(new User(displayname.getText().toString(),
-                email.getText().toString(), phonenumber.getText().toString()));
+                email.getText().toString(), phonenumber.getText().toString(), 0d, 0d, 0d));
 
     }
     public void Signup(View view) {
