@@ -21,6 +21,7 @@
                 android:id="@+id/walker_tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="?attr/colorPrimaryDark"
                 style="@style/CustomTabLayout"
                 app:tabGravity="fill"
                 app:tabMode="fixed">
@@ -33,6 +34,7 @@
         android:id="@+id/walker_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/colorPrimary"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" >
     </androidx.viewpager.widget.ViewPager>
 

@@ -8,7 +8,7 @@ public class WalkRequest {
     private String status;
     private String offer;
     private Object timestamp;
-    private String lat, lng;
+    private String clientlat, clientlong;
 
     public WalkRequest() {
 
@@ -61,19 +61,19 @@ public class WalkRequest {
         this.timestamp = timestamp;
     }
 
-    public String getLat(){
-        return lat;
+    public String getClientlat(){
+        return clientlat;
     }
 
-    public void setLat(String lat){
-        this.lat = lat;
+    public void setClientlat(String clientlat){
+        this.clientlat = clientlat;
     }
 
-    public String getLng(){
-        return lng;
+    public String getClientlong(){
+        return clientlong;
     }
 
-    public void setLng(String lng){
-        this.lng = lng;
+    public void setClientlong(String clientlong){
+        this.clientlong = clientlong;
     }
 }

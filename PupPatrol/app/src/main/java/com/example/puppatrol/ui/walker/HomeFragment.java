@@ -125,7 +125,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         reqAcceptedView = root.findViewById(R.id.walker_home_accepted_requests);
         reqStartedView = root.findViewById(R.id.walker_home_started_requests);
         reqCompletedView = root.findViewById(R.id.walker_home_completed_requests);
-        numReviewsView = root.findViewById(R.id.review_count);
+        numReviewsView = root.findViewById(R.id.walker_home_review_count);
         ratingBar = root.findViewById(R.id.walker_home_rating_bar);
         statusSwitch = root.findViewById(R.id.walker_switch_status);
         availabilitySwitch = root.findViewById(R.id.walker_switch_availability);
