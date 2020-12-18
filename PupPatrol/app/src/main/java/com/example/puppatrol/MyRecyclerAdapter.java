@@ -187,7 +187,6 @@ public class MyRecyclerAdapter
                                 //add if statement to handle if no rating
 
                                 check = dataSnapshot.child("walker_reviews").exists();
-
                                     holder.ratingBar.isIndicator();
                                     holder.ratingBar.setRating(Float.parseFloat(dataSnapshot.child("walker_rating").getValue().toString()));
                                     holder.reviewcount.setText("(" + dataSnapshot.child("walker_reviews").getValue().toString() + ")");
@@ -199,11 +198,7 @@ public class MyRecyclerAdapter
                             public void onCancelled(@NonNull DatabaseError error) {
                             }
                         });
-
-
-
-
-
+      
                 holder.imageButton.setOnClickListener(new View.OnClickListener(){
 
                     @Override

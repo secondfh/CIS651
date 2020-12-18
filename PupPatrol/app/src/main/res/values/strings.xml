@@ -8,8 +8,8 @@
 
     // Walker activity strings
     <string name="walker_menu_home">Home</string>
-    <string name="walker_menu_requests">Requests</string>
-    <string name="walker_menu_history">History</string>
+    <string name="walker_menu_walks">Walks</string>
+    <string name="walker_menu_reviews">Reviews</string>
     <string name="walker_setting_status">Show as Walker</string>
     <string name="walker_setting_available">Available for requests</string>
     <string name="walker_home_pending_requests">Pending requests</string>
@@ -19,11 +19,24 @@
     <string name="walker_home_avg_rating">Average rating</string>
 
 
-    // Request status
+    // Request status and action
     <string name="request_created">Created</string>
     <string name="request_accepted">Accepted</string>
     <string name="request_rejected">Rejected</string>
     <string name="request_started">Started</string>
-    <string name="request_complete">Complete</string>
+    <string name="request_completed">Completed</string>
+    <string name="action_request">Request</string>
+    <string name="action_accept">Accept</string>
+    <string name="action_reject">Reject</string>
+    <string name="action_start">Start</string>
+    <string name="action_finish">Finish</string>
+    <string name="title_activity_walker3">WalkerActivity3</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
 
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 </resources>

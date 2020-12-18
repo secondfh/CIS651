@@ -4,6 +4,11 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#32DA03</color>
     <color name="splashBackground">#225c6e</color>
-    <color name="offwhite">#f3f5f6</color>
+    <color name="offwhite">#f0f0f0</color>
     <color name="transparent">#00000000</color>
+    <color name="colorPirmaryAlt">#3f51b5</color>
+    <color name="colorInfo">#62b1f6</color>
+    <color name="colorOK">#5cb85c</color>
+    <color name="colorNotOK">#d9534f</color>
+    <color name="colorWarning">#f0ad4e</color>
 </resources>

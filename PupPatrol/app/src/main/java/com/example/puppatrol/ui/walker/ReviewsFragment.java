@@ -12,14 +12,14 @@ import com.example.puppatrol.R;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class HistoryFragment extends Fragment {
+public class ReviewsFragment extends Fragment {
 
-    public HistoryFragment(){
+    public ReviewsFragment(){
 
     }
 
-    public static HistoryFragment newInstance(int index) {
-        HistoryFragment fragment = new HistoryFragment();
+    public static ReviewsFragment newInstance(int index) {
+        ReviewsFragment fragment = new ReviewsFragment();
         return fragment;
     }
 
@@ -30,7 +30,7 @@ public class HistoryFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_walker_history2, container, false);
+        View root = inflater.inflate(R.layout.fragment_walker_reviews, container, false);
         return root;
     }
 }

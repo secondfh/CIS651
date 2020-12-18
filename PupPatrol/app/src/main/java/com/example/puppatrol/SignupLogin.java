@@ -168,8 +168,10 @@ public class SignupLogin extends AppCompatActivity {
                         if(currentUser.isEmailVerified()){
                             Toast.makeText(SignupLogin.this, "Login Successful.", Toast.LENGTH_SHORT).show();
 //                            startActivity(new Intent(SignupLogin.this, HomeActivity.class));
-                            startActivity(new Intent(SignupLogin.this, ChooseRoleActivity.class));
-                            finish();
+                            Intent intent = new Intent(SignupLogin.this, ChooseRoleActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+//                            finish();
                         }
                         else
                         {
