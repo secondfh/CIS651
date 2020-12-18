@@ -33,6 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText email, password, displayname, phonenumber;
     private ImageView profilePic;
     private Uri imageUri;
+	private Double  walker_rating,  walker_reviews, total_rating;
 
     private static final int OPEN_FILE=0012;
 
@@ -52,6 +53,9 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         profilePic.setVisibility(View.GONE);
+		walker_rating = 0.0;
+        walker_reviews = 0.0;
+        total_rating = 0.0;
     }
 
     @Override
@@ -109,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
         final DatabaseReference usersRef = database.getReference("Users");
         if (imageUri == null) {
             usersRef.child(currentUser.getUid()).setValue(new User(displayname.getText().toString(),
-                    email.getText().toString(), phonenumber.getText().toString()));
+                    email.getText().toString(), phonenumber.getText().toString(),walker_rating, walker_reviews, total_rating));
         } else {
             FirebaseStorage storage= FirebaseStorage.getInstance();
             final String fileNameInStorage= UUID.randomUUID().toString();
@@ -123,7 +127,7 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             usersRef.child(currentUser.getUid()).setValue(new User(displayname.getText().toString(),
-                                    email.getText().toString(), phonenumber.getText().toString(), uri.toString()));
+                                    email.getText().toString(), phonenumber.getText().toString(), uri.toString(),walker_reviews,walker_reviews,total_rating));
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override

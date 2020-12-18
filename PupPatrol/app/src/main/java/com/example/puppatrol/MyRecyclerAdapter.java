@@ -88,10 +88,8 @@ public class MyRecyclerAdapter
     private RecyclerView r;
     private Marker currentMarker = null;
     private ItemClickListener itemClickListener;
-    public Boolean check;
-    public long totalReviews;
-    public double avgRate;
-
+    public Boolean check, exists;
+    public String totalReviews, totalRate;
 
     public MyRecyclerAdapter(HashMap<String, PostModel> kp, List<String> kl, ItemClickListener _itemClickListener, RecyclerView recyclerView) {
         r = recyclerView;
@@ -116,6 +114,7 @@ public class MyRecyclerAdapter
         final PostModel u = key_to_Post.get(keyList.get(position));
         String uid = u.uid;
         LocationManager locationManager;
+
 
         if (ActivityCompat.checkSelfPermission(r.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(r.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -181,52 +180,25 @@ public class MyRecyclerAdapter
                 });
 
                 holder.uref = database.getReference("Users").child(uid);
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-
 
                         holder.uref.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 //add if statement to handle if no rating
-                                check = dataSnapshot.child("walker_reviews").exists();
-//                                if(!dataSnapshot.child("walker_rating").exists() && !dataSnapshot.child("walker_reviews").exists()){
-//                                    holder.ratingBar.setRating(0);
-//                                    holder.reviewcount.setText("0");
-//                                }
-//                                else{
-//                                    holder.ratingBar.isIndicator();
-//                                    holder.ratingBar.setRating(Float.parseFloat(dataSnapshot.child("walker_rating").getValue().toString()));
-//                                    holder.reviewcount.setText("(" + dataSnapshot.child("walker_reviews").getValue().toString() + ")");
-//                                    totalReviews = (long) dataSnapshot.child("walker_reviews").getValue();
-//                                    avgRate = (double) dataSnapshot.child("walker_rating").getValue();
-//                                }
-                                boolean hasReviews = dataSnapshot.child("walker_reviews").exists();
-                                boolean hasRating = dataSnapshot.child("walker_rating").exists();
-                                long reviews = hasReviews ? (long) dataSnapshot.child("walker_reviews").getValue() : 0;
-                                long rating = hasRating ? (long) dataSnapshot.child("walker_rating").getValue() : 0;
-                                if (hasRating) {
-                                    holder.ratingBar.isIndicator();
-                                    holder.ratingBar.setRating(Float.parseFloat(String.valueOf(rating)));
-                                }
-                                holder.reviewcount.setText("(" + String.valueOf(reviews) + ")");
-                                totalReviews = reviews;
-                                avgRate = Long.valueOf(rating).doubleValue();
-                            }
 
+                                check = dataSnapshot.child("walker_reviews").exists();
+                                    holder.ratingBar.isIndicator();
+                                    holder.ratingBar.setRating(Float.parseFloat(dataSnapshot.child("walker_rating").getValue().toString()));
+                                    holder.reviewcount.setText("(" + dataSnapshot.child("walker_reviews").getValue().toString() + ")");
+                                    totalReviews =  dataSnapshot.child("walker_reviews").getValue().toString();
+                                    totalRate =  dataSnapshot.child("total_rating").getValue().toString();
+                                    
+                            }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {
-
                             }
                         });
-
-
-                    }
-                }, 3500);
-
-
+      
                 holder.imageButton.setOnClickListener(new View.OnClickListener(){
 
                     @Override
@@ -254,7 +226,7 @@ public class MyRecyclerAdapter
                 pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Picasso.get().load(uri).into(holder.imageView);
+                        Picasso.get().load(u.url).into(holder.imageView);
                     }
                 });
 
@@ -302,6 +274,7 @@ public class MyRecyclerAdapter
                         else{if(snapshot.child("status").getValue().toString().equals("Accepted")){
                             holder.reqbtn.setText("In Progress");
                             holder.reqbtn.setBackgroundColor(Color.parseColor("#32AD03"));
+                            holder.reqbtn.setClickable(false);
                         }else{
                             if(snapshot.child("status").getValue().toString().equals("Rejected")){
 
@@ -313,6 +286,7 @@ public class MyRecyclerAdapter
 
                                         holder.reqbtn.setText("Request");
                                         holder.reqbtn.setBackgroundResource(R.drawable.signup_button);
+                                        holder.reqbtn.setClickable(true);
 
 
                                     }
@@ -324,6 +298,8 @@ public class MyRecyclerAdapter
                             }else{
                                 if(snapshot.child("status").getValue().toString().equals("Created")){
                                     holder.reqbtn.setText("Cancel");
+                                    holder.reqbtn.setClickable(true);
+                                    holder.reqbtn.setBackgroundResource(R.drawable.signup_button);
                                 }else {
                                     if(snapshot.child("status").getValue().toString().equals("Complete")){
                                         holder.reqbtn.setText("Request");
@@ -344,10 +320,12 @@ public class MyRecyclerAdapter
                                                 if(check.equals(false)){
                                                     holder.uref.child("walker_reviews").setValue(1).toString();
                                                     holder.uref.child("walker_rating").setValue(totalbones);
+                                                    holder.uref.child("total_rating").setValue(totalbones);
                                                 } else {
 
-                                                    holder.uref.child("walker_reviews").setValue(totalReviews + 1).toString();
-                                                    holder.uref.child("walker_rating").setValue((totalbones + avgRate)/(totalReviews + 1));
+                                                    holder.uref.child("walker_reviews").setValue(Double.parseDouble(totalReviews) + 1).toString();
+                                                    holder.uref.child("walker_rating").setValue((totalbones + Double.parseDouble(totalRate))/(Double.parseDouble(totalReviews)+1));
+                                                    holder.uref.child("total_rating").setValue(Double.parseDouble(totalRate) + totalbones);
                                                 }
 
                                             }
@@ -360,6 +338,8 @@ public class MyRecyclerAdapter
                                                 });
                                         ratebuilder.create();
                                         ratebuilder.show();
+                                        requestRef.child(u.postKey).removeValue();
+                                        holder.reqbtn.setBackgroundResource(R.drawable.signup_button);
                                     }
                                 }
                             }

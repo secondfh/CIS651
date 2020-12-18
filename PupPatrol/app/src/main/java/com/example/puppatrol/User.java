@@ -7,22 +7,29 @@ public class User {
     public String email;
     public String phone;
     public Object timestamp;
+	public Double walker_reviews, total_rating, walker_rating;
     public String url;
 
-    public User(String displayname, String email, String phone) {
+    public User(String displayname, String email, String phone,Double walker_rating, Double walker_reviews, Double total_rating) {
         this.displayname=displayname;
         this.email=email;
         this.phone=phone;
         this.timestamp= ServerValue.TIMESTAMP;
+		this.total_rating=total_rating;
+        this.walker_rating=walker_rating;
+        this.walker_reviews=walker_reviews;
     }
+    public User(String displayname, String email, String phone, boolean equals, boolean equals1, boolean equals2, Double walker_rating, Double walker_reviews, Double total_rating ) {
+    }
+
     public Object getTimestamp(){
         return timestamp;
     }
     public User() {
 
     }
-    public User(String displayname, String email, String phone, String url) {
-        this(displayname, email, phone);
+    public User(String displayname, String email, String phone, String url, Double walker_rating, Double walker_reviews, Double total_rating) {
+        this(displayname, email, phone, walker_rating, walker_reviews, total_rating);
         this.url = url;
     }
 
