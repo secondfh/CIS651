@@ -122,7 +122,7 @@ public class RequestsFragment extends Fragment{
                 WalkRequest request = snapshot.getValue(WalkRequest.class);
                 if (request.getWalker().equals(currentUserId) && statusValue.contains(request.getStatus())){
                     requestGroups.get(statusValue.indexOf(request.getStatus())).addItem(new RequestListItem(requestKey, request));
-                    requestListAdapter.notifyDataSetChanged();
+                    requestListAdapter.updateList(requestGroups);
                 }
             }
 
@@ -136,7 +136,7 @@ public class RequestsFragment extends Fragment{
                     if (group != REQ_NOT_FOUND) {
                         requestGroups.get(group).removeItemByKey(requestKey);
                         requestGroups.get(statusValue.indexOf(request.getStatus())).addItem(new RequestListItem(requestKey, request));
-                        requestListAdapter.notifyDataSetChanged();
+                        requestListAdapter.updateList(requestGroups);
                     }
                 }
             }
@@ -150,7 +150,7 @@ public class RequestsFragment extends Fragment{
                     /* Should always exist for onChildRemoved event */
                     if (group != REQ_NOT_FOUND){
                         requestGroups.get(group).removeItemByKey(requestKey);
-                        requestListAdapter.notifyDataSetChanged();
+                        requestListAdapter.updateList(requestGroups);
                     }
                 }
             }

@@ -42,13 +42,17 @@ public class RequestListAdapter extends BaseExpandableListAdapter {
             this.requestGroups = new ArrayList<>();
         else
             this.requestGroups = requestGroups;
-
     }
 
     public void updateMyLocation(double lat, double lng){
         myLat = lat;
         myLng = lng;
         locationSet = true;
+        notifyDataSetChanged();
+    }
+
+    public void updateList(List<RequestListGroup> requestGroups){
+        this.requestGroups = requestGroups;
         notifyDataSetChanged();
     }
 
@@ -87,7 +91,9 @@ public class RequestListAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.request_list_group, parent, false);
         }
         TextView groupTitle = convertView.findViewById(R.id.request_list_group);
+        TextView groupItemCount = convertView.findViewById(R.id.request_list_group_count);
         groupTitle.setText(requestGroups.get(groupPosition).getGroupName());
+        groupItemCount.setText(Integer.toString(requestGroups.get(groupPosition).size()));
         return convertView;
     }
 
