@@ -25,8 +25,10 @@ public class WalkerPagerAdapter extends FragmentPagerAdapter {
         mFragmentTitleList.add("Home");
         mFragmentList.add(new RequestsFragment());
         mFragmentTitleList.add("Walks");
+        /*
         mFragmentList.add(new ReviewsFragment());
         mFragmentTitleList.add("Reviews");
+        */
     }
 
     @NonNull
