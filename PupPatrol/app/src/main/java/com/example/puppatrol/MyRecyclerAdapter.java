@@ -126,17 +126,18 @@ public class MyRecyclerAdapter
         holder.uref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                double lat = locationGPS.getLatitude();
-                double longi = locationGPS.getLongitude();
-                float[] result = new float[1];
-                String wlat, wlong;
-                wlat = dataSnapshot.child("lat").getValue().toString();
-                wlong = dataSnapshot.child("lng").getValue().toString();
-                Location.distanceBetween(lat, longi, Double.parseDouble(wlat),Double.parseDouble(wlong), result);
-                double conv = result[0] / 1609;
-                holder.distance.setText(roundTwoDecimals(conv) + " miles");
-                u.m.setPosition(new LatLng(Double.parseDouble(wlat), Double.parseDouble(wlong)));
+                if (dataSnapshot.exists()) {
+                    double lat = locationGPS.getLatitude();
+                    double longi = locationGPS.getLongitude();
+                    float[] result = new float[1];
+                    String wlat, wlong;
+                    wlat = dataSnapshot.child("lat").getValue().toString();
+                    wlong = dataSnapshot.child("lng").getValue().toString();
+                    Location.distanceBetween(lat, longi, Double.parseDouble(wlat), Double.parseDouble(wlong), result);
+                    double conv = result[0] / 1609;
+                    holder.distance.setText(roundTwoDecimals(conv) + " miles");
+                    u.m.setPosition(new LatLng(Double.parseDouble(wlat), Double.parseDouble(wlong)));
+                }
             }
 
             @Override
@@ -301,7 +302,7 @@ public class MyRecyclerAdapter
                                     holder.reqbtn.setClickable(true);
                                     holder.reqbtn.setBackgroundResource(R.drawable.signup_button);
                                 }else {
-                                    if(snapshot.child("status").getValue().toString().equals("Complete")){
+                                    if(snapshot.child("status").getValue().toString().equals("Completed")){
                                         holder.reqbtn.setText("Request");
                                         final AlertDialog.Builder ratebuilder = new AlertDialog.Builder(r.getContext());
                                         LinearLayout linearLayout = new LinearLayout(r.getContext());

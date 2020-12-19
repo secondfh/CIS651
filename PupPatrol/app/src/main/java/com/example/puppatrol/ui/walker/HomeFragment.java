@@ -54,6 +54,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private static final int REQUEST_FOR_LOCATION = 0012;
     private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
@@ -67,7 +71,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     SwitchCompat statusSwitch, availabilitySwitch;
     LinearLayout settingsShowHideLayout, settingsContentLayout;
     ImageView settingsShowHideImg;
-    private int reqPending, reqAccepted, reqStarted, reqCompleted;
+    private int reqCreated, reqAccepted, reqStarted, reqCompleted;
     private Context mContext;
     private LocationCallback locationCallback;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -76,6 +80,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
     final DatabaseReference ref = FirebaseDatabase.getInstance().getReference("/geofire");
     final GeoFire geoFire = new GeoFire(ref);
+    private HashMap<String, List<String>> reqCreatedList, reqAcceptedList, reqStartedList, reqCompletedList;
+    private String CREATED, ACCEPTED, STARTED, COMPLETED;
+
 
     public static class WalkerPost {
         public String uid;
@@ -104,6 +111,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mContext = context;
+        Resources res = mContext.getResources();
+        CREATED = res.getString(R.string.request_created);
+        ACCEPTED = res.getString(R.string.request_accepted);
+        STARTED = res.getString(R.string.request_started);
+        COMPLETED = res.getString(R.string.request_completed);
     }
 
     @Override
@@ -116,6 +128,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         currentUserRef = database.getReference("Users").child(currentUid);
         requestsRef = database.getReference("Requests");
         postsRef = database.getReference("Posts");
+        reqCreatedList = new HashMap<>();
+        reqAcceptedList = new HashMap<>();
+        reqStartedList = new HashMap<>();
+        reqCompletedList = new HashMap<>();
     }
 
     @Override
@@ -169,28 +185,33 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
                     String status = snapshot.child("status").getValue(String.class);
                     Resources resources = mContext.getResources();
                     if (status.equals(resources.getString(R.string.request_created)))
-                        reqPending++;
+                        reqCreated++;
                     if (status.equals(resources.getString(R.string.request_accepted)))
                         reqAccepted++;
                     if (status.equals(resources.getString(R.string.request_started)))
                         reqStarted++;
                     if (status.equals(resources.getString(R.string.request_completed)))
                         reqCompleted++;
-                    reqPendingView.setText(Integer.toString(reqPending));
-                    reqAcceptedView.setText(Integer.toString(reqAccepted));
-                    reqStartedView.setText(Integer.toString(reqStarted));
-                    reqCompletedView.setText(Integer.toString(reqCompleted));
+                    updateCounts();
                 }
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if (snapshot.child("walker").getValue(String.class).equals(currentUid)){
+                    String reqKey = snapshot.getKey();
+                    String newStatus = snapshot.child("status").getValue(String.class);
 
+                }
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                if (snapshot.child("walker").getValue(String.class).equals(currentUid)){
+                    String reqKey = snapshot.getKey();
+                    String newStatus = snapshot.child("status").getValue(String.class);
 
+                }
             }
 
             @Override
@@ -241,6 +262,17 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
         }
         mFusedLocationClient.requestLocationUpdates(mLocationRequest, locationCallback, Looper.getMainLooper());
         return root;
+    }
+
+    private void addToList(String status){
+
+    }
+
+    private void updateCounts(){
+        reqPendingView.setText(Integer.toString(reqCreated));
+        reqAcceptedView.setText(Integer.toString(reqAccepted));
+        reqStartedView.setText(Integer.toString(reqStarted));
+        reqCompletedView.setText(Integer.toString(reqCompleted));
     }
 
     @Override
